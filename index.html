@@ -1,13 +1,18 @@
 <!doctype html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
+
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" href="/logo-icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/logo-icon-192.png" />
+
     <!-- Primary SEO Meta Tags -->
-    <title>M/S Abdul Salam Constructions Company | Residential Turnkey Construction Bhadohi</title>
-    <meta name="description" content="M/S Abdul Salam Constructions Company provides residential turnkey construction, RCC civil engineering, and building works in Bhadohi, Uttar Pradesh based on transparent quotation rates and verified BOQ specifications." />
-    <meta name="keywords" content="M/S Abdul Salam Constructions Company, Abdul Salam Construction Company, construction company in bhadohi, building contractor bhadohi, turnkey house construction uttar pradesh, civil contractor aurai road, residential turnkey construction gyanpur, commercial construction gopiganj, house construction rates bhadohi, rcc civil engineering uttar pradesh, civil contractor 221401" />
+    <title>M/S Abdul Salam Constructions Company | Residential Turnkey Construction Bhadohi, Mirzapur, Jaunpur, Varanasi & Prayagraj</title>
+    <meta name="description" content="M/S Abdul Salam Constructions Company provides residential turnkey construction, RCC civil engineering, and building works across Bhadohi, Mirzapur, Jaunpur, Varanasi & Prayagraj, Uttar Pradesh based on transparent quotation rates and verified BOQ specifications." />
+    <meta name="keywords" content="M/S Abdul Salam Constructions Company, Abdul Salam Construction Company, construction company in bhadohi, building contractor bhadohi, construction company mirzapur, construction company jaunpur, construction company varanasi, construction company prayagraj, turnkey house construction purwanchal, civil contractor aurai road, residential turnkey construction gyanpur, commercial construction gopiganj, house construction rates bhadohi, rcc civil engineering uttar pradesh, civil contractor 221401" />
     <meta name="author" content="M/S Abdul Salam Constructions Company" />
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
     <link rel="canonical" href="https://abdulconstruction.com/" />
@@ -22,8 +27,8 @@
     <meta property="og:locale" content="en_IN" />
     <meta property="og:type" content="business.business" />
     <meta property="og:site_name" content="M/S Abdul Salam Constructions Company" />
-    <meta property="og:title" content="M/S Abdul Salam Constructions Company | Residential Turnkey Construction Bhadohi" />
-    <meta property="og:description" content="M/S Abdul Salam Constructions Company provides residential turnkey construction, RCC civil engineering, and building works in Bhadohi, Uttar Pradesh based on transparent quotation rates and verified BOQ specifications." />
+    <meta property="og:title" content="M/S Abdul Salam Constructions Company | Residential Turnkey Construction Bhadohi, Mirzapur, Jaunpur, Varanasi & Prayagraj" />
+    <meta property="og:description" content="M/S Abdul Salam Constructions Company provides residential turnkey construction, RCC civil engineering, and building works across Bhadohi, Mirzapur, Jaunpur, Varanasi & Prayagraj, Uttar Pradesh based on transparent quotation rates and verified BOQ specifications." />
     <meta property="og:url" content="https://abdulconstruction.com/" />
     <meta property="og:image" content="https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1200&h=630&q=80" />
     <meta property="business:contact_data:street_address" content="Phase-II, Rajpura Colony, Opposite H.P. Petrol Pump, Aurai Road" />
@@ -34,14 +39,32 @@
 
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="M/S Abdul Salam Constructions Company | Residential Turnkey Construction Bhadohi" />
-    <meta name="twitter:description" content="M/S Abdul Salam Constructions Company provides residential turnkey construction, RCC civil engineering, and building works in Bhadohi, Uttar Pradesh based on transparent quotation rates and verified BOQ specifications." />
+    <meta name="twitter:title" content="M/S Abdul Salam Constructions Company | Residential Turnkey Construction Bhadohi, Mirzapur, Jaunpur, Varanasi & Prayagraj" />
+    <meta name="twitter:description" content="M/S Abdul Salam Constructions Company provides residential turnkey construction, RCC civil engineering, and building works across Bhadohi, Mirzapur, Jaunpur, Varanasi & Prayagraj, Uttar Pradesh based on transparent quotation rates and verified BOQ specifications." />
     <meta name="twitter:image" content="https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1200&h=630&q=80" />
+
+    <!-- Hero image-sequence first frame — the canvas in Hero.tsx draws 15
+         PNG frames (public/frames/f01.png...f015.png) loaded via `new
+         Image()` once React mounts, but the browser's preload scanner can't
+         see that fetch until the JS bundle has been downloaded, parsed, and
+         run. Preloading just f01.png (the frame painted the instant the
+         hero appears, before any scroll input) closes that gap so the very
+         first paint doesn't wait behind the JS parse/execute step — this is
+         the one frame that actually gates first paint; frames 2-15 are only
+         needed once the visitor starts scrolling, which is already well
+         after JS has taken over and started the normal eager Image() loads
+         in Hero.tsx. fetchpriority="high" lets it compete against the
+         Google Fonts requests below for bandwidth instead of queuing behind
+         them. Left as a normal (non-`type`) image preload since it's
+         consumed via Image()/canvas, not decoded as a document resource. -->
+    <link rel="preload" as="image" href="/frames/f01.png" fetchpriority="high" />
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <!-- Archivo (condensed cuts included) drives the big bold headings for
+         the Ospey-style restyle; Manrope stays for body/UI text. -->
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,500;0,600;0,700;0,800;0,900;1,700&family=Archivo+Expanded:wght@700;800&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- JSON-LD LocalBusiness & GeneralContractor GEO Schema -->
     <script type="application/ld+json">
@@ -54,12 +77,12 @@
       "legalName": "M/S ABDUL SALAM CONSTRUCTIONS COMPANY",
       "taxID": "09EOZPS3260D1ZB",
       "url": "https://abdulconstruction.com/",
-      "logo": "https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=300&q=80",
+      "logo": "https://abdulconstruction.com/logo-full-color.png",
       "image": [
         "https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1200&q=80",
         "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80"
       ],
-      "description": "M/S Abdul Salam Constructions Company provides residential turnkey construction, RCC civil engineering, and building works in Bhadohi, Uttar Pradesh based on transparent quotation rates and verified BOQ specifications.",
+      "description": "M/S Abdul Salam Constructions Company provides residential turnkey construction, RCC civil engineering, and building works across Bhadohi, Mirzapur, Jaunpur, Varanasi & Prayagraj, Uttar Pradesh based on transparent quotation rates and verified BOQ specifications.",
       "telephone": "+917007529965",
       "email": "contact@abdulconstruction.com",
       "priceRange": "₹1500 - ₹2250 per sq.ft (+ 18% GST)",
@@ -94,6 +117,26 @@
           "sameAs": "https://en.wikipedia.org/wiki/Bhadohi"
         },
         {
+          "@type": "City",
+          "name": "Mirzapur",
+          "sameAs": "https://en.wikipedia.org/wiki/Mirzapur"
+        },
+        {
+          "@type": "City",
+          "name": "Jaunpur",
+          "sameAs": "https://en.wikipedia.org/wiki/Jaunpur,_India"
+        },
+        {
+          "@type": "City",
+          "name": "Varanasi",
+          "sameAs": "https://en.wikipedia.org/wiki/Varanasi"
+        },
+        {
+          "@type": "City",
+          "name": "Prayagraj",
+          "sameAs": "https://en.wikipedia.org/wiki/Prayagraj"
+        },
+        {
           "@type": "AdministrativeArea",
           "name": "Gyanpur"
         },
@@ -116,6 +159,10 @@
         {
           "@type": "AdministrativeArea",
           "name": "Sant Ravidas Nagar District"
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "Purwanchal"
         }
       ],
       "knowsAbout": [
@@ -197,7 +244,7 @@
           "name": "Which areas in Uttar Pradesh does the company service?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Active construction site operations cover Bhadohi City, Aurai Road, Gyanpur, Gopiganj, Suriyawan, Khamaria, and adjacent areas across Sant Ravidas Nagar district."
+            "text": "Active construction site operations cover Bhadohi, Mirzapur, Jaunpur, Varanasi, and Prayagraj, including Bhadohi City, Aurai Road, Gyanpur, Gopiganj, Suriyawan, Khamaria, and adjacent areas across Sant Ravidas Nagar district and the wider Purwanchal region."
           }
         },
         {
@@ -212,7 +259,7 @@
     }
     </script>
   </head>
-  <body class="font-sans antialiased bg-[#F8FAFC] text-[#0B1B3D] selection:bg-[#E58A1F] selection:text-white">
+  <body class="font-sans antialiased bg-[#ffffff] text-[#0f1420] selection:bg-[#C9A24A]/25 selection:text-[#0f1420]">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

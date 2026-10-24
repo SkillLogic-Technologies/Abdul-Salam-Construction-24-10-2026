@@ -60,10 +60,10 @@ export function extractLeadDetails(text: string, currentLead: LeadInfo): Partial
     }
   }
 
-  // 3. Location extraction (Bhadohi region towns and localities)
+  // 3. Location extraction (Bhadohi, Mirzapur, Jaunpur, Varanasi, Prayagraj towns and localities)
   const knownLocations = [
     'bhadohi', 'gyanpur', 'gopiganj', 'aurai', 'suriyawan', 'khamaria',
-    'rajpura', 'maryadpatti', 'chauri', 'varanasi', 'prayagraj', 'mirzapur',
+    'rajpura', 'maryadpatti', 'chauri', 'varanasi', 'prayagraj', 'mirzapur', 'jaunpur',
     'nai bazar', 'station road', 'civil lines', 'babhnan', 'aboli'
   ];
   for (const loc of knownLocations) {
@@ -104,7 +104,7 @@ export function generateWhatsAppLink(lead: LeadInfo, recentQuery?: string): stri
 
   if (lead.name) lines.push(`👤 *Client Name:* ${lead.name}`);
   if (lead.phone) lines.push(`📞 *Client Mobile:* ${lead.phone}`);
-  if (lead.location) lines.push(`📍 *Construction Site:* ${lead.location}, Bhadohi Region`);
+  if (lead.location) lines.push(`📍 *Construction Site:* ${lead.location}, Purwanchal Region`);
   if (lead.area) lines.push(`📐 *Plot / Slab Area:* ${lead.area} Sq.Ft`);
   if (lead.packagePreference) {
     const pkgLabels = {
@@ -148,7 +148,7 @@ export function getSmartBotReply(
     // If we have full lead (name + phone or phone), give direct WhatsApp handoff
     if (updatedLead.phone) {
       return {
-        reply: `${mainReply}\n\n✅ *Aapka contact note ho gaya hai.* Hamare Site Engineer aapko WhatsApp par BOQ schedule bhej rahe hain. Aap chahein toh turant niche click karke WhatsApp par bhi connect ho sakte hain!`,
+        reply: `${mainReply}\n\n✅ *Aapki details note kar li hain.* Hamari team jald sampark karegi. Aap chahein toh turant niche click karke WhatsApp par bhi connect ho sakte hain!`,
         showCta: true
       };
     }
@@ -162,7 +162,7 @@ export function getSmartBotReply(
 
     if (!updatedLead.location) {
       return {
-        reply: `${mainReply}\n\n📍 *Aapka project kis area me hai?* (Jaise Bhadohi town, Gyanpur, Gopiganj, Aurai Road, etc.)`
+        reply: `${mainReply}\n\n📍 *Aapka project kis area me hai?* (Jaise Bhadohi, Mirzapur, Jaunpur, Varanasi, Prayagraj, ya Gyanpur/Gopiganj/Aurai Road etc.)`
       };
     }
 
@@ -258,7 +258,7 @@ Ghar banana har parivaar ka sabse bada sapna hota hai, aur zaroori nahi ki shuru
    Shuru me fancy tiles, false ceiling ya mehnge show items ki jagah smooth cement flooring aur simple paint rakhein. Isse construction quality me koi samjhauta kiye bina laakhon rupaye bach jate hain.
 
 4️⃣ **Transparent Local Team:**
-   Abdul Salam Constructions Bhadohi me direct karigaron aur transparent material procurement ke sath kaam karti hai — koi beech ka thekedaari commission nahi.
+   Abdul Salam Constructions Bhadohi, Mirzapur, Jaunpur, Varanasi aur Prayagraj me direct karigaron aur transparent material procurement ke sath kaam karti hai — koi beech ka thekedaari commission nahi.
 
 Aap khulkar batayein, abhi aapke pass lagbhag **kitna budget (jaise ₹3 Lakh, ₹5 Lakh ya ₹7 Lakh)** aasaani se ban payega? Hum usi ke andar aapke sar par ek pakki aur mazboot chhat plan kar denge.`;
 
@@ -376,7 +376,7 @@ Ghar banwane ka step-by-step civil engineering process is tarah rahega:
 • **Residential Hall:** ${hallCost} (+ 18% GST)
 • **Premium Villa (POP Ceilings):** ${premCost} (+ 18% GST)
 
-Aapka yeh plot Bhadohi me kis area (jaise Gyanpur, Gopiganj, Aurai Road, Suriyawan, etc.) me hai? Hamare Senior Site Engineer free inspection ke liye plot ka exact level check karke aapko customized 2D Floor Plan layout bhej denge.`;
+Aapka yeh plot kis area me hai — Bhadohi, Mirzapur, Jaunpur, Varanasi, Prayagraj (jaise Gyanpur, Gopiganj, Aurai Road, Suriyawan, etc.)? Hamare Senior Site Engineer free inspection ke liye plot ka exact level check karke aapko customized 2D Floor Plan layout bhej denge.`;
 
     return {
       reply: roadmapReply,
@@ -713,12 +713,12 @@ Iske alawa contract me diye gaye BOQ par **zero hidden cost** rehti hai!`;
   }
 
   // 17. SERVICE LOCATIONS & PHYSICAL OFFICE
-  if (/kahan|location|address|office|service area|bhadohi|gyanpur|gopiganj|aurai|suriyawan|kahan kaam karte/i.test(lower)) {
+  if (/kahan|location|address|office|service area|bhadohi|mirzapur|jaunpur|varanasi|prayagraj|purwanchal|gyanpur|gopiganj|aurai|suriyawan|kahan kaam karte/i.test(lower)) {
     const locReply = `📍 **Hamara Work Area & Registered Engineering Office:**
 
-• **Core Service Areas:** Bhadohi Town, Gyanpur, Gopiganj (NH-19), Aurai Road, Suriyawan, Khamaria, Chauri, aur sant Ravidas Nagar district ke sabhi residential ilaqe.
+• **Core Service Areas:** Bhadohi, Mirzapur, Jaunpur, Varanasi, aur Prayagraj — including Bhadohi Town, Gyanpur, Gopiganj (NH-19), Aurai Road, Suriyawan, Khamaria, Chauri, aur poore Purwanchal region ke residential/commercial ilaqe.
 • **Physical Site Office:** Phase-II, Rajpura Colony, Opp. H.P. Petrol Pump, Aurai Road, Bhadohi – 221401 (U.P.).
-• **Site Inspection:** Agar aapka plot is region me hai, toh hamare Civil Engineer bina kisi charge ke site par aakar layout dekh sakte hain.`;
+• **Site Inspection:** Agar aapka plot Bhadohi, Mirzapur, Jaunpur, Varanasi ya Prayagraj me hai, toh hamare Civil Engineer bina kisi charge ke site par aakar layout dekh sakte hain.`;
 
     const res = appendNaturalNextStep(locReply);
     return {
@@ -789,7 +789,7 @@ Aap niche diye gaye button par click karke turant WhatsApp par directly chat shu
   if (leadUpdate.phone || (leadUpdate.name && !asksCost)) {
     let ack = '';
     if (leadUpdate.name && leadUpdate.phone) {
-      ack = `Bahut dhanyawad **${leadUpdate.name} ji**! Aapka number (+91 ${leadUpdate.phone}) note ho gaya hai. Hamare Site Engineer aapse turant connect karenge.`;
+      ack = `Bahut dhanyawad **${leadUpdate.name} ji**! Aapka number (+91 ${leadUpdate.phone}) note ho gaya hai. Hamari team jald sampark karegi.`;
     } else if (leadUpdate.name) {
       ack = `Namaste **${leadUpdate.name} ji**! Aapka naam register ho gaya hai.`;
     } else if (leadUpdate.phone) {

@@ -101,7 +101,7 @@ Items and scopes excluded from the turnkey quotation rate (billed separately or 
 # Locations
 Headquarters & Engineering Office: Phase-II, Rajpura Colony, Opposite H.P. Petrol Pump, Aurai Road, Bhadohi, Uttar Pradesh – 221401
 District: Sant Ravidas Nagar (Bhadohi District), Uttar Pradesh
-Active Service Localities: Bhadohi City, Aurai Road Corridor, Gyanpur Headquarters, Gopiganj GT Road (NH-19), Suriyawan, Khamaria, and adjacent corridors across Sant Ravidas Nagar district.
+Active Service Areas: Bhadohi, Mirzapur, Jaunpur, Varanasi, and Prayagraj, and the wider Purwanchal region — including Bhadohi City, Aurai Road Corridor, Gyanpur Headquarters, Gopiganj GT Road (NH-19), Suriyawan, Khamaria, and adjacent corridors across Sant Ravidas Nagar district.
 
 # Contact
 Registered Legal Name: M/S ABDUL SALAM CONSTRUCTIONS COMPANY

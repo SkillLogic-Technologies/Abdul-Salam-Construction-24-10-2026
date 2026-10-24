@@ -1,23 +1,15 @@
 import React from 'react';
 import {
   ShieldCheck,
-  Award,
-  HardHat,
-  CheckCircle2,
-  Users,
-  Compass,
-  Building2,
   MapPin,
-  Clock,
-  Mail,
-  ArrowRight,
-  FileCheck
+  Clock
 } from 'lucide-react';
-import { motion } from 'motion/react';
-import { COMPANY_DATA, WHY_CHOOSE_US, PROCESS_STEPS } from '../data/companyData';
+import { WHY_CHOOSE_US } from '../data/companyData';
 import { Button } from '../components/common/Button';
 import { SectionHeading } from '../components/common/SectionHeading';
 import { Logo } from '../components/common/Logo';
+import { useScrollReveal } from '../lib/useScrollReveal';
+import { useCountUp } from '../lib/useCountUp';
 
 interface AboutPageProps {
   onNavigate: (href: string) => void;
@@ -30,45 +22,38 @@ export const AboutPage: React.FC<AboutPageProps> = ({
   onOpenQuoteModal,
   onOpenConsultationModal
 }) => {
+  const valuesRef = useScrollReveal<HTMLDivElement>({ stagger: 0.08 });
+  // Stats strip — real, traceable numbers (not invented marketing copy):
+  // 15 years in business, 20 turnkey projects delivered, 75,000 sq.ft of
+  // total built-up area constructed to date.
+  const statsRef = useScrollReveal<HTMLDivElement>({ selector: '[data-reveal-stat]', stagger: 0.1 });
+  const yearsRef = useCountUp<HTMLSpanElement>({ end: 15, suffix: '+' });
+  const projectsRef = useCountUp<HTMLSpanElement>({ end: 20, suffix: '+' });
+  const sqftRef = useCountUp<HTMLSpanElement>({
+    end: 75000,
+    suffix: '+',
+    format: (v) => Math.round(v).toLocaleString('en-IN')
+  });
+
   return (
-    <div className="w-full bg-[#F8FAFC]">
-      {/* 1. HERO HEADER */}
-      <section className="bg-[#0B1B3D] text-white py-16 sm:py-20 border-b border-[#2A2A2A] w-full">
+    <div className="w-full bg-[var(--canvas-alt)]">
+      {/* HERO HEADER */}
+      <section className="bg-[var(--canvas)] text-[var(--ink)] py-16 sm:py-20 border-b border-[var(--line)] w-full">
         <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
           <div className="max-w-3xl space-y-4">
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-              className="inline-flex items-center gap-2 px-3 py-1 bg-[#E58A1F]/10 border border-[#E58A1F]/30 text-[#E58A1F] text-xs font-bold uppercase tracking-wider"
-            >
+            <div className="vh-eyebrow">
               <span>About Abdul Salam Construction Company</span>
-            </motion.div>
-            
-            <motion.h1
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.45, delay: 0.1 }}
-              className="font-heading font-black text-3xl sm:text-4xl md:text-5xl text-white tracking-tight leading-tight"
-            >
+            </div>
+
+            <h1 className="font-heading font-black text-4xl sm:text-5xl md:text-6xl text-[var(--ink)] tracking-tight leading-[1.0]">
               Quality Construction. Built Around Your Vision.
-            </motion.h1>
+            </h1>
 
-            <motion.p
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.45, delay: 0.2 }}
-              className="text-sm sm:text-base text-gray-300 leading-relaxed font-sans"
-            >
+            <p className="text-sm sm:text-base text-[var(--ink-soft)] leading-relaxed font-sans">
               Headquartered at Harirampur, Aurai Road, Bhadohi, we are dedicated to transforming architectural blueprints into structurally resilient homes, commercial centers, and community landmarks.
-            </motion.p>
+            </p>
 
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.45, delay: 0.3 }}
-              className="pt-2"
-            >
+            <div className="pt-2">
               <Button
                 variant="primary"
                 size="md"
@@ -77,60 +62,92 @@ export const AboutPage: React.FC<AboutPageProps> = ({
               >
                 REQUEST OFFICE CONSULTATION
               </Button>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* 2. COMPANY PROFILE & ETHOS */}
+      {/* TRACK RECORD STATS — count-up on scroll (once, then self-destructs;
+          see useCountUp.ts). transform/opacity fade+rise on the tiles
+          themselves via useScrollReveal (same pattern as the rest of the
+          site); the number counting itself only ever writes textContent,
+          never a CSS property, so it has no layout/paint cost of its own. */}
+      <section className="bg-[var(--canvas)] py-12 sm:py-16 border-b border-[var(--line)] w-full">
+        <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
+          <div ref={statsRef} className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div data-reveal-stat className="text-center p-6 sm:p-8 border border-[var(--line)] rounded-xl">
+              <span ref={yearsRef} className="block text-4xl sm:text-5xl font-black font-heading text-[var(--brick)] tracking-tight">
+                0+
+              </span>
+              <span className="mt-2 block text-xs sm:text-sm font-bold uppercase tracking-wider text-[var(--ink-soft)]">
+                Years in Business
+              </span>
+            </div>
+
+            <div data-reveal-stat className="text-center p-6 sm:p-8 border border-[var(--line)] rounded-xl">
+              <span ref={projectsRef} className="block text-4xl sm:text-5xl font-black font-heading text-[var(--brick)] tracking-tight">
+                0+
+              </span>
+              <span className="mt-2 block text-xs sm:text-sm font-bold uppercase tracking-wider text-[var(--ink-soft)]">
+                Projects Delivered
+              </span>
+            </div>
+
+            <div data-reveal-stat className="text-center p-6 sm:p-8 border border-[var(--line)] rounded-xl">
+              <span ref={sqftRef} className="block text-4xl sm:text-5xl font-black font-heading text-[var(--brick)] tracking-tight">
+                0+
+              </span>
+              <span className="mt-2 block text-xs sm:text-sm font-bold uppercase tracking-wider text-[var(--ink-soft)]">
+                Sq.Ft Constructed
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* COMPANY PROFILE & ETHOS */}
       <section className="py-16 sm:py-20 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 w-full">
         <div className="w-full max-w-[1920px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           <div className="lg:col-span-6 space-y-5">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-[#E58A1F]">
+            <span className="text-xs font-bold uppercase tracking-[0.24em] text-[var(--brick)]">
               Our Foundation
             </span>
-            <h2 className="font-heading font-black text-2xl sm:text-3xl md:text-4xl text-[#0B1B3D] leading-tight">
-              Engineering Precision Meets Transparent Construction in Bhadohi
+            <h2 className="font-heading font-black text-3xl sm:text-4xl md:text-5xl text-[var(--ink)] leading-[1.05] tracking-tight">
+              Engineering Precision Meets Transparent Construction Across Purwanchal
             </h2>
-            <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
-              Founded on the principles of engineering honesty and craftsmanship, <strong>Abdul Salam Construction Company</strong> has established itself as the go-to builder for families and businesses in Bhadohi.
+            <p className="text-xs sm:text-sm text-[var(--ink-soft)] leading-relaxed">
+              Founded on the principles of engineering honesty and craftsmanship, <strong>Abdul Salam Construction Company</strong> has established itself as the go-to builder for families and businesses across Bhadohi, Mirzapur, Jaunpur, Varanasi & Prayagraj.
             </p>
-            <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
+            <p className="text-xs sm:text-sm text-[var(--ink-soft)] leading-relaxed">
               We manage all dimensions of the construction lifecycle: structural soil load testing, architectural CAD drafting, sanctioning approvals, cement hydration monitoring, shuttering safety, and turnkey interior joinery.
             </p>
 
             <div className="grid grid-cols-2 gap-4 pt-2">
-              <motion.div whileHover={{ y: -2 }} className="p-4 bg-white border border-gray-200 rounded-sm">
-                <span className="text-2xl font-black text-[#0B1B3D] block font-heading">
+              <div className="p-5 bg-[var(--canvas)] border border-[var(--line)] rounded-xl shadow-elevate">
+                <span className="text-3xl font-black text-[var(--ink)] block font-heading tracking-tight">
                   100%
                 </span>
-                <span className="text-xs text-gray-500 font-semibold">
+                <span className="text-xs text-[var(--ink-soft)] font-semibold">
                   Material Verification & BOQ Adherence
                 </span>
-              </motion.div>
+              </div>
 
-              <motion.div whileHover={{ y: -2 }} className="p-4 bg-white border border-gray-200 rounded-sm">
-                <span className="text-2xl font-black text-[#E58A1F] block font-heading">
+              <div className="p-5 bg-[var(--canvas)] border border-[var(--line)] rounded-xl shadow-elevate">
+                <span className="text-3xl font-black text-[var(--brick)] block font-heading tracking-tight">
                   Milestone
                 </span>
-                <span className="text-xs text-gray-500 font-semibold">
+                <span className="text-xs text-[var(--ink-soft)] font-semibold">
                   Stage-Wise Escrow & Site Sign-Off
                 </span>
-              </motion.div>
+              </div>
             </div>
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="lg:col-span-6 bg-[#0B1B3D] text-white p-8 sm:p-10 border border-[#2A2A2A] relative overflow-hidden rounded-sm shadow-xl"
-          >
+          <div className="lg:col-span-6 bg-[var(--canvas)] text-[var(--ink)] p-8 sm:p-10 border border-[var(--line)] relative overflow-hidden rounded-xl shadow-elevate">
             <div className="relative z-10 space-y-6">
-              <Logo variant="light" size="lg" />
+              <Logo variant="dark" size="lg" />
 
-              <div className="space-y-3 pt-4 border-t border-white/10 text-xs sm:text-sm text-gray-300">
+              <div className="space-y-3 pt-4 border-t border-[var(--line)] text-xs sm:text-sm text-[var(--ink-soft)]">
                 <p>
                   <strong>Office Location:</strong> Opposite H.P. Petrol Pump, Harirampur, Aurai Road, Bhadohi, Uttar Pradesh – 221401
                 </p>
@@ -150,12 +167,12 @@ export const AboutPage: React.FC<AboutPageProps> = ({
                 </Button>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* 3. CORE PRINCIPLES & VALUES */}
-      <section className="bg-white py-16 sm:py-20 border-y border-gray-200 w-full">
+      {/* CORE PRINCIPLES & VALUES */}
+      <section className="bg-[var(--canvas)] py-16 sm:py-20 border-y border-[var(--line)] w-full">
         <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
           <SectionHeading
             badge="Our Guiding Principles"
@@ -164,61 +181,66 @@ export const AboutPage: React.FC<AboutPageProps> = ({
             description="We believe in complete transparency, rigorous safety protocols, and enduring structural stability."
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div ref={valuesRef} className="divide-y divide-gray-200 border-t border-b border-[var(--line)]">
             {WHY_CHOOSE_US.map((item, idx) => (
-              <motion.div
+              <div
                 key={idx}
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: idx * 0.08 }}
-                whileHover={{ y: -5 }}
-                className="p-6 bg-slate-50 border border-gray-200 hover:border-[#E58A1F] transition-all rounded-sm shadow-sm group"
+                data-reveal
+                className="group grid grid-cols-1 sm:grid-cols-12 gap-3 sm:gap-6 items-center py-7 sm:py-8 hover:bg-[var(--canvas-alt)] transition-colors duration-300 px-2 sm:px-4 rounded-xl"
               >
-                <div className="w-10 h-10 bg-white group-hover:bg-[#E58A1F] text-[#0B1B3D] group-hover:text-white flex items-center justify-center border border-gray-200 group-hover:border-[#E58A1F] mb-4 transition-colors rounded-sm">
-                  <ShieldCheck className="w-5 h-5" />
+                <div className="sm:col-span-2 flex items-center gap-4 sm:block">
+                  <span className="font-heading font-black text-4xl sm:text-5xl text-gray-200 group-hover:text-[var(--brick)]/30 transition-colors tracking-tight">
+                    0{idx + 1}
+                  </span>
                 </div>
-                <h3 className="font-heading font-extrabold text-base text-[#0B1B3D] group-hover:text-[#E58A1F] transition-colors mb-2">
-                  {item.title}
-                </h3>
-                <p className="text-xs text-gray-600 leading-relaxed">
-                  {item.description}
-                </p>
-              </motion.div>
+                <div className="sm:col-span-7">
+                  <h3 className="font-heading font-extrabold text-lg text-[var(--ink)] group-hover:text-[var(--brick)] transition-colors mb-1.5">
+                    {item.title}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-[var(--ink-soft)] leading-relaxed max-w-xl">
+                    {item.description}
+                  </p>
+                </div>
+                <div className="sm:col-span-3 flex sm:justify-end">
+                  <div className="w-11 h-11 bg-[var(--canvas-alt)] group-hover:bg-[var(--brick)] text-[var(--ink)] group-hover:text-white flex items-center justify-center transition-all duration-300 rounded-lg border border-[var(--line)] shadow-elevate group-hover:rotate-6 flex-shrink-0">
+                    <ShieldCheck className="w-5 h-5" />
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 4. OFFICE & HEADQUARTERS DIRECTORY */}
+      {/* OFFICE & HEADQUARTERS DIRECTORY */}
       <section className="py-16 sm:py-20 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 w-full">
-        <div className="w-full max-w-[1920px] mx-auto bg-white border border-gray-200 p-8 sm:p-10 shadow-sm rounded-sm">
+        <div className="w-full max-w-[1920px] mx-auto bg-[var(--canvas)] border border-[var(--line)] p-8 sm:p-12 shadow-elevate rounded-xl">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-7 space-y-4">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-[#E58A1F]">
+              <span className="text-xs font-bold uppercase tracking-[0.24em] text-[var(--brick)]">
                 Direct Consultation
               </span>
-              <h2 className="font-heading font-black text-2xl sm:text-3xl text-[#0B1B3D]">
+              <h2 className="font-heading font-black text-3xl sm:text-4xl text-[var(--ink)] tracking-tight">
                 Visit Our Office at Harirampur, Aurai Road
               </h2>
-              <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
+              <p className="text-xs sm:text-sm text-[var(--ink-soft)] leading-relaxed">
                 Meet our senior project managers and structural civil engineers to inspect 3D floor models, material samples (cement grades, TMT steel, tile catalogs), and draft project timelines.
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 text-xs">
                 <div className="flex items-start gap-2.5">
-                  <MapPin className="w-4 h-4 text-[#E58A1F] flex-shrink-0 mt-0.5" />
+                  <MapPin className="w-4 h-4 text-[var(--brick)] flex-shrink-0 mt-0.5" />
                   <div>
-                    <strong className="block text-[#0B1B3D]">Address:</strong>
-                    <span className="text-gray-600">Opposite H.P. Petrol Pump, Harirampur, Aurai Road, Bhadohi – 221401</span>
+                    <strong className="block text-[var(--ink)]">Address:</strong>
+                    <span className="text-[var(--ink-soft)]">Opposite H.P. Petrol Pump, Harirampur, Aurai Road, Bhadohi – 221401</span>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-2.5">
-                  <Clock className="w-4 h-4 text-[#E58A1F] flex-shrink-0 mt-0.5" />
+                  <Clock className="w-4 h-4 text-[var(--brick)] flex-shrink-0 mt-0.5" />
                   <div>
-                    <strong className="block text-[#0B1B3D]">Working Hours:</strong>
-                    <span className="text-gray-600">Monday – Sunday: 8:00 AM – 8:00 PM</span>
+                    <strong className="block text-[var(--ink)]">Working Hours:</strong>
+                    <span className="text-[var(--ink-soft)]">Monday – Sunday: 8:00 AM – 8:00 PM</span>
                   </div>
                 </div>
               </div>

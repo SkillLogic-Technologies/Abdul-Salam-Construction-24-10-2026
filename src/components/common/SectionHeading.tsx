@@ -1,4 +1,6 @@
 import React from 'react';
+import { useScrollReveal } from '../../lib/useScrollReveal';
+import { useFitOneLine } from '../../lib/useFitOneLine';
 
 interface SectionHeadingProps {
   badge?: string;
@@ -8,6 +10,11 @@ interface SectionHeadingProps {
   align?: 'left' | 'center';
   theme?: 'light' | 'dark';
   className?: string;
+  /** Tighter vertical rhythm (smaller gap above the description, smaller
+   * bottom margin on the whole block) for sections that want a more
+   * compact header — default spacing (used everywhere else) is unchanged
+   * unless this is explicitly opted into. */
+  tight?: boolean;
 }
 
 export const SectionHeading: React.FC<SectionHeadingProps> = ({
@@ -16,30 +23,41 @@ export const SectionHeading: React.FC<SectionHeadingProps> = ({
   highlightWords = [],
   description,
   align = 'center',
-  theme = 'light',
-  className = ''
+  className = '',
+  tight = false
 }) => {
-  const isDark = theme === 'dark';
   const isCenter = align === 'center';
+  // More noticeable than the site's default scroll-reveal (which is
+  // deliberately minimal elsewhere): a bigger rise distance and a slower,
+  // slightly overshooting ease so every section title visibly animates in
+  // as you scroll to it, rather than just crisply appearing.
+  const ref = useScrollReveal<HTMLDivElement>({
+    selector: '[data-reveal-item]',
+    stagger: 0.12,
+    y: 32,
+    duration: 0.8,
+    ease: 'back.out(1.4)'
+  });
+  // Auto-shrinks just this heading's font-size if its specific title text
+  // is too long to fit the container on one line at the shared
+  // .vh-heading-size — short titles never trigger a shrink and keep their
+  // full size; only a long one like "Why Homeowners & Businesses Trust Us"
+  // gets ratioed down, rather than every heading site-wide being capped to
+  // whatever size the longest title needs.
+  const fitRef = useFitOneLine<HTMLHeadingElement>();
 
-  // Helper to highlight specific words
   const renderHighlightedTitle = () => {
     if (!highlightWords || highlightWords.length === 0) {
       return title;
     }
 
-    // Split title by words and highlight matches
     const parts = title.split(new RegExp(`(${highlightWords.join('|')})`, 'gi'));
     return parts.map((part, idx) => {
       const isMatch = highlightWords.some(
         (word) => word.toLowerCase() === part.toLowerCase()
       );
       if (isMatch) {
-        return (
-          <span key={idx} className="text-[#E58A1F]">
-            {part}
-          </span>
-        );
+        return <em key={idx}>{part}</em>;
       }
       return part;
     });
@@ -47,36 +65,27 @@ export const SectionHeading: React.FC<SectionHeadingProps> = ({
 
   return (
     <div
-      className={`max-w-3xl mb-12 sm:mb-16 ${
+      ref={ref}
+      className={`max-w-5xl ${tight ? 'mb-6 sm:mb-8' : 'mb-14 sm:mb-20'} ${
         isCenter ? 'mx-auto text-center' : 'text-left'
       } ${className}`}
     >
       {badge && (
-        <div
-          className={`inline-flex items-center gap-2 px-3 py-1 text-[11px] font-bold tracking-[0.18em] uppercase mb-3.5 border ${
-            isDark
-              ? 'bg-[#0B1B3D] text-[#E58A1F] border-[#1E3A5F]'
-              : 'bg-[#E58A1F]/10 text-[#0B1B3D] border-[#E58A1F]/30'
-          }`}
-        >
-          <span className="w-1.5 h-1.5 bg-[#E58A1F] inline-block" />
+        <div data-reveal-item className={`vh-eyebrow mb-4 ${isCenter ? 'justify-center' : ''}`}>
           {badge}
         </div>
       )}
 
-      <h2
-        className={`font-heading text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight leading-tight ${
-          isDark ? 'text-white' : 'text-[#0B1B3D]'
-        }`}
-      >
+      <h2 ref={fitRef} data-reveal-item className="vh-heading vh-heading-size">
         {renderHighlightedTitle()}
       </h2>
 
+      <div data-reveal-item className={`vh-heading-rule ${isCenter ? '' : 'is-left'}`} />
+
       {description && (
         <p
-          className={`mt-4 text-sm sm:text-base md:text-lg leading-relaxed ${
-            isDark ? 'text-slate-300' : 'text-slate-600'
-          } ${isCenter ? 'max-w-2xl mx-auto' : ''}`}
+          data-reveal-item
+          className={`vh-subtext vh-subtext-size ${tight ? 'mt-3' : 'mt-6'} ${isCenter ? 'max-w-2xl mx-auto' : ''}`}
         >
           {description}
         </p>

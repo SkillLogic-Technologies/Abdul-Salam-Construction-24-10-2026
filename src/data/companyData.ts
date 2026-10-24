@@ -60,77 +60,10 @@ export const PROMO_MESSAGES = [
 
 export const NAVIGATION_ITEMS: NavigationItem[] = [
   { name: "Home", href: "/" },
-  {
-    name: "Services",
-    href: "/services",
-    hasDropdown: true,
-    dropdownItems: [
-      {
-        name: "Residential House Construction",
-        href: "/services#residential",
-        description: "Complete turnkey construction for independent homes and villas.",
-        icon: "Home"
-      },
-      {
-        name: "New Home Construction",
-        href: "/services#new-home",
-        description: "Modern architectural planning, 3D elevation, and full build.",
-        icon: "Compass"
-      },
-      {
-        name: "Renovation & Remodeling",
-        href: "/services#renovation",
-        description: "Structural retrofitting, floor additions, and modern facelifts.",
-        icon: "Hammer"
-      },
-      {
-        name: "Commercial Construction",
-        href: "/services#commercial",
-        description: "Retail spaces, multi-purpose complexes, and office structures.",
-        icon: "Building2"
-      },
-      {
-        name: "Structural Work",
-        href: "/services#structural",
-        description: "Precision RCC framework, deep foundations, and beam casting.",
-        icon: "Layers"
-      },
-      {
-        name: "Finishing & Interior Work",
-        href: "/services#finishing",
-        description: "Plastering, premium flooring, sanitary plumbing, and painting.",
-        icon: "Paintbrush"
-      }
-    ]
-  },
+  { name: "Services", href: "/services" },
   { name: "Packages", href: "/packages" },
   { name: "Projects", href: "/projects" },
   { name: "About", href: "/about" },
-  {
-    name: "More",
-    href: "/service-areas",
-    hasDropdown: true,
-    dropdownItems: [
-      {
-        name: "Service Areas",
-        href: "/service-areas",
-        description: "Areas covered in Bhadohi district and surrounding corridors.",
-        icon: "MapPin"
-      },
-      {
-        name: "FAQ",
-        href: "/faq",
-        description: "Answers to common questions regarding planning, stages, and quotes.",
-        icon: "HelpCircle"
-      },
-      {
-        name: "Cost Guide & Models",
-        href: "/packages#cost-models",
-        description: "Understanding Transparent Cost-Plus vs. Lump-Sum models.",
-        icon: "Calculator"
-      }
-    ]
-  },
   { name: "Contact", href: "/contact" }
 ];
 
@@ -279,7 +212,7 @@ export const SERVICES_DATA: Service[] = [
       "Facade finishing with ACP/tile/structural glazing provisions"
     ],
     timeline: "6 to 15 Months",
-    suitableFor: "Commercial plot owners, retail businesses, clinic/office developers in Bhadohi and surrounding hubs.",
+    suitableFor: "Commercial plot owners, retail businesses, clinic/office developers across Bhadohi, Mirzapur, Jaunpur, Varanasi & Prayagraj.",
     keyFeatures: [
       {
         title: "Optimized Usable Carpet Area",
@@ -302,7 +235,7 @@ export const SERVICES_DATA: Service[] = [
     shortDescription: "Specialized deep excavation, isolated & raft foundations, column casting, beam shuttering, and slab pouring.",
     fullDescription: "The structure is the backbone of any building. We specialize in precision RCC frame construction, ensuring correct rebar spacing, concrete mix ratios, vibration compaction, and water curing schedules for maximum compressive strength.",
     iconName: "Layers",
-    image: "https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1200&q=80",
+    image: "https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=1200&q=80",
     deliverables: [
       "Geotechnical soil verification & layout marking",
       "Machine excavation, anti-termite chemical barrier, and PCC bed",
@@ -373,7 +306,7 @@ export const PACKAGES_DATA: ConstructionPackage[] = [
     badge: "Commercial & Open Hall Value",
     tagline: "Engineered heavy RCC framework and quality civil shell designed for open halls, commercial retail units, and economical residences.",
     priceNote: "₹1,500 / SQFT + 18% GST (Official Civil & Core MEP Scope)",
-    bestFor: "Open commercial halls, retail showrooms, warehouse basements, and budget-optimized residential spaces in Bhadohi.",
+    bestFor: "Open commercial halls, retail showrooms, warehouse basements, and budget-optimized residential spaces across Bhadohi, Mirzapur, Jaunpur, Varanasi & Prayagraj.",
     officialPdfRef: "Quotation & Material Specification for Construction of Hall (Residential/Commercial) at ₹1500/SQFT + 18% GST",
     keyPills: [
       "RCC 3:2:1 Concrete Mix",
@@ -451,7 +384,7 @@ export const PACKAGES_DATA: ConstructionPackage[] = [
       doorsWindows: "Prominence UPVC windows (₹450-550/sqft), UPVC/Aluminium washroom doors, heavy MS entrance gate",
       painting: "2-coat wall putty + primer + Asian Paints / Nerolac emulsion (₹4,500-6,500/bucket)"
     },
-    recommendedFor: "Commercial halls, retail complexes, godowns, and budget-conscious residential builders in Bhadohi."
+    recommendedFor: "Commercial halls, retail complexes, godowns, and budget-conscious residential builders across Bhadohi, Mirzapur, Jaunpur, Varanasi & Prayagraj."
   },
   {
     id: "standard",
@@ -462,7 +395,7 @@ export const PACKAGES_DATA: ConstructionPackage[] = [
     badge: "Most Popular in Bhadohi",
     tagline: "Our most requested turnkey residential blueprint featuring branded Jaquar wall-hung sanitaryware, polished dining marble, and UPVC windows.",
     priceNote: "₹1,850 / SQFT + 18% GST (Official Residential Turnkey Scope)",
-    bestFor: "2 to 3 floor modern residential family residences, independent duplexes, and villas across Bhadohi and Varanasi.",
+    bestFor: "2 to 3 floor modern residential family residences, independent duplexes, and villas across Bhadohi, Mirzapur, Jaunpur, Varanasi & Prayagraj.",
     officialPdfRef: "Quotation & Material Specification for Construction of Building (Residential) at ₹1850/SQFT + 18% GST",
     keyPills: [
       "RCC 3:2:1 Graded Concrete",
@@ -558,7 +491,7 @@ export const PACKAGES_DATA: ConstructionPackage[] = [
     badge: "Flagship Luxury Turnkey",
     tagline: "Flagship residential construction crafted with full POP designer ceilings, premium Jaquar wall-hung suites, Century Ply woodwork, and luxury marble flooring.",
     priceNote: "₹2,250 / SQFT + 18% GST (Flagship Turnkey with POP & Luxury Jaquar)",
-    bestFor: "Luxury independent duplex villas, high-end family residences, and multi-storey builds (Basement + G + 2) in Bhadohi & Varanasi.",
+    bestFor: "Luxury independent duplex villas, high-end family residences, and multi-storey builds (Basement + G + 2) across Bhadohi, Mirzapur, Jaunpur, Varanasi & Prayagraj.",
     officialPdfRef: "Quotation & Material Specification for Construction of Building (Residential) at ₹2250/SQFT + 18% GST",
     keyPills: [
       "Designer POP False Ceilings",
@@ -644,7 +577,7 @@ export const PACKAGES_DATA: ConstructionPackage[] = [
       doorsWindows: "Century Ply / Advance flush doors with Godrej locks, Prominence UPVC windows (₹550-750/sqft)",
       painting: "POP work (₹90-125/sqft) + double coat putty + Nerolac / Asian washable emulsion (₹5,000-7,000/bucket)"
     },
-    recommendedFor: "Clients desiring the highest tier of turnkey residential quality, brand authenticity, and finish in Bhadohi."
+    recommendedFor: "Clients desiring the highest tier of turnkey residential quality, brand authenticity, and finish across Bhadohi, Mirzapur, Jaunpur, Varanasi & Prayagraj."
   },
   {
     id: "custom",
@@ -1298,9 +1231,9 @@ export const PROJECTS_DATA: Project[] = [
     contractType: "Lump-Sum",
     packageApplied: "Premium Residential & Commercial Turnkey",
     completionYear: "2025 - 2026",
-    image: "https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1200&q=80",
+    image: "https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=1200&q=80",
     gallery: [
-      "https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80"
@@ -1346,7 +1279,7 @@ export const PROJECTS_DATA: Project[] = [
     gallery: [
       "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80"
     ],
     overview: "A contemporary duplex family residence designed with spacious double-height living room, Vastu-compliant north-east prayer zone, natural skylight, and large balconies.",
@@ -1431,7 +1364,7 @@ export const PROJECTS_DATA: Project[] = [
     image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80",
     gallery: [
       "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1200&q=80"
     ],
     overview: "A multi-purpose commercial complex engineered for flexible retail showroom space on the ground floor and professional office cabins on upper levels.",
@@ -1510,7 +1443,7 @@ export const PROJECTS_DATA: Project[] = [
     image: "https://images.unsplash.com/photo-1581094288338-2314dddb7ece?auto=format&fit=crop&w=1200&q=80",
     gallery: [
       "https://images.unsplash.com/photo-1581094288338-2314dddb7ece?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=1200&q=80"
+      "https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=1200&q=80"
     ],
     overview: "Adding a brand new 2-bedroom first-floor suite on top of an existing ground floor home, complete with structural column retrofitting and modern exterior elevation makeover.",
     scopeOfWork: [
@@ -1617,45 +1550,6 @@ export const TESTIMONIALS_DATA: Testimonial[] = [
   }
 ];
 
-export const PROCESS_STEPS = [
-  {
-    step: "01",
-    title: "Consultation & Site Visit",
-    shortDesc: "Understand your requirements, plot dimensions, and budget expectations.",
-    details: "We meet to understand your family's needs, conduct a preliminary site inspection of your plot, and discuss preferred architectural styles and budgets."
-  },
-  {
-    step: "02",
-    title: "Planning & 3D Design",
-    shortDesc: "Architectural 2D floor plans, 3D elevation renders, and structural layouts.",
-    details: "Our architects create optimized floor layouts, 3D front elevations, and structural drawings ensuring proper light, ventilation, and structural safety."
-  },
-  {
-    step: "03",
-    title: "Transparent Estimation",
-    shortDesc: "Detailed Bill of Quantities (BOQ) with clear material specifications.",
-    details: "We provide an itemized estimation detailing cement grades, steel rebar specs, tile allowances, and timeline milestones before signing contracts."
-  },
-  {
-    step: "04",
-    title: "Construction & Supervision",
-    shortDesc: "Precision execution from foundation excavation to RCC frame and masonry.",
-    details: "Our experienced workforce and dedicated site supervisors manage daily execution, concrete curing schedules, and milestone quality checks."
-  },
-  {
-    step: "05",
-    title: "Quality Inspection",
-    shortDesc: "Rigorous checklist audits for plumbing pressure, electricals, and leveling.",
-    details: "Before handing over each section, we perform multi-point inspections on waterproofing, plumb lines, tile bonding, and sanitary fittings."
-  },
-  {
-    step: "06",
-    title: "Clean Handover",
-    shortDesc: "Final deep cleaning, key handover, and documentation package.",
-    details: "You receive your finished, move-in-ready home along with as-built drawings, warranties, and construction records."
-  }
-];
-
 export const WHY_CHOOSE_US = [
   {
     title: "Transparent Communication",
@@ -1718,7 +1612,7 @@ export const FAQ_DATA: FAQItem[] = [
     id: "faq-5",
     category: "Pricing",
     question: "What information do you need for an accurate estimate?",
-    answer: "To calculate an accurate estimate, we need your plot size (e.g., 30x50 ft), the planned built-up area, the number of floors (e.g., G+1), your preferred package/finishing level (Essential, Standard, Premium), and the site location in Bhadohi or nearby areas."
+    answer: "To calculate an accurate estimate, we need your plot size (e.g., 30x50 ft), the planned built-up area, the number of floors (e.g., G+1), your preferred package/finishing level (Essential, Standard, Premium), and the site location across Bhadohi, Mirzapur, Jaunpur, Varanasi, Prayagraj or nearby areas."
   },
   {
     id: "faq-6",
@@ -1742,7 +1636,7 @@ export const FAQ_DATA: FAQItem[] = [
     id: "faq-9",
     category: "Service Areas",
     question: "Which areas do you provide construction services in?",
-    answer: "We primarily operate in Bhadohi, Harirampur, Aurai Road, Gyanpur, Gopiganj, Suriyawan, and nearby surrounding regions across Bhadohi district and the adjacent Varanasi-Mirzapur highway corridors."
+    answer: "We primarily operate across Bhadohi, Mirzapur, Jaunpur, Varanasi, and Prayagraj — including Harirampur, Aurai Road, Gyanpur, Gopiganj, Suriyawan, and the wider Purwanchal region."
   },
   {
     id: "faq-10",
@@ -1754,26 +1648,15 @@ export const FAQ_DATA: FAQItem[] = [
 
 export const SERVICE_AREAS_DATA: ServiceArea[] = [
   {
-    id: "bhadohi-city",
-    name: "Bhadohi City & Civil Lines",
+    id: "bhadohi",
+    name: "Bhadohi",
     district: "Bhadohi (Sant Ravidas Nagar)",
     state: "Uttar Pradesh",
     status: "Active Coverage",
     distanceFromOffice: "Central Office Hub / 0 - 5 km",
-    landmark: "Civil Lines, Station Road, Main Bazaar, Maryadpatti",
-    description: "Comprehensive turnkey residential and commercial construction services across all central localities of Bhadohi.",
+    landmark: "Civil Lines, Station Road, Harirampur, Aurai Road, Main Bazaar",
+    description: "Our home base — comprehensive turnkey residential and commercial construction services across Bhadohi city and all its localities.",
     popularServices: ["Independent Duplex Homes", "Commercial Complexes", "Luxury Villas", "Renovation"]
-  },
-  {
-    id: "harirampur-aurai-road",
-    name: "Harirampur & Aurai Road Corridor",
-    district: "Bhadohi",
-    state: "Uttar Pradesh",
-    status: "Active Coverage",
-    distanceFromOffice: "Immediate Office Vicinity (Opposite HP Petrol Pump)",
-    landmark: "Opposite H.P. Petrol Pump, Aurai Road Highway Corridor",
-    description: "Our home location with dedicated rapid site deployment for residential plots, independent houses, and highway commercial spaces.",
-    popularServices: ["Residential House Construction", "Commercial Showrooms", "RCC Structural Frame", "Site Consultations"]
   },
   {
     id: "gyanpur",
@@ -1788,7 +1671,7 @@ export const SERVICE_AREAS_DATA: ServiceArea[] = [
   },
   {
     id: "gopiganj",
-    name: "Gopiganj & GT Road Corridor",
+    name: "Gopiganj",
     district: "Bhadohi",
     state: "Uttar Pradesh",
     status: "Active Coverage",
@@ -1798,25 +1681,58 @@ export const SERVICE_AREAS_DATA: ServiceArea[] = [
     popularServices: ["Commercial Buildings", "Residential Houses", "First Floor Additions"]
   },
   {
-    id: "suriyawan",
-    name: "Suriyawan & Surrounding Townships",
-    district: "Bhadohi",
+    id: "varanasi",
+    name: "Varanasi",
+    district: "Varanasi",
     state: "Uttar Pradesh",
     status: "Active Coverage",
-    distanceFromOffice: "Approx. 15 km",
-    landmark: "Suriyawan Market, Railway Station Road",
-    description: "Complete construction services for independent family homes, farmhouse properties, and retail storefronts.",
-    popularServices: ["Independent Houses", "Turnkey Civil Work", "Finishing & Waterproofing"]
+    distanceFromOffice: "Approx. 48 km",
+    landmark: "Varanasi City & Ring Road Corridor",
+    description: "Premium residential villas, duplex homes, and commercial construction delivered with the same transparent BOQ standards across Varanasi.",
+    popularServices: ["Luxury Villas", "Duplex Homes", "Commercial Showrooms"]
   },
   {
-    id: "nearby-corridors",
-    name: "Aurai & Adjacent Highway Belt",
-    district: "Bhadohi / Varanasi Border",
+    id: "mirzapur",
+    name: "Mirzapur",
+    district: "Mirzapur",
     state: "Uttar Pradesh",
     status: "Active Coverage",
-    distanceFromOffice: "Approx. 10 - 20 km",
-    landmark: "Aurai Tehsil, NH-19 Connectivity Corridor",
-    description: "Dependable construction execution for growing residential colonies and mixed-use properties along the Aurai corridor.",
+    distanceFromOffice: "Approx. 45 km",
+    landmark: "Vindhyachal Corridor, NH-35 Connectivity",
+    description: "Turnkey residential and commercial construction services across Mirzapur city and its surrounding growth corridors.",
+    popularServices: ["Residential House Construction", "Commercial Buildings", "Turnkey Civil Work"]
+  },
+  {
+    id: "jaunpur",
+    name: "Jaunpur",
+    district: "Jaunpur",
+    state: "Uttar Pradesh",
+    status: "Active Coverage",
+    distanceFromOffice: "Approx. 55 km",
+    landmark: "Jaunpur City & Adjoining Tehsil Belt",
+    description: "Structured turnkey construction and civil engineering execution for residential plots and commercial developments across Jaunpur.",
+    popularServices: ["Independent Houses", "Commercial Complexes", "RCC Structural Frame"]
+  },
+  {
+    id: "prayagraj",
+    name: "Prayagraj",
+    district: "Prayagraj",
+    state: "Uttar Pradesh",
+    status: "Active Coverage",
+    distanceFromOffice: "Approx. 90 km",
+    landmark: "Prayagraj City & Surrounding Tehsils",
+    description: "Full-scope turnkey construction and site engineering supervision for residential and commercial clients across Prayagraj.",
+    popularServices: ["Residential House Construction", "Commercial Buildings", "Site Consultations"]
+  },
+  {
+    id: "nearby-areas",
+    name: "& Nearby Areas",
+    district: "Purwanchal Region",
+    state: "Uttar Pradesh",
+    status: "Active Coverage",
+    distanceFromOffice: "Varies by location",
+    landmark: "Harirampur, Aurai Road, Suriyawan, and adjoining Purwanchal corridors",
+    description: "Dependable construction execution for residential colonies and mixed-use properties across the wider Purwanchal region.",
     popularServices: ["Residential Villas", "Duplex Homes", "Commercial Shops"]
   }
 ];
@@ -1833,7 +1749,7 @@ export const GALLERY_ITEMS = [
     id: "g2",
     title: "Precision RCC Slab Casting",
     category: "Structural Work",
-    image: "https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=800&q=80",
     location: "Aurai Road Project"
   },
   {

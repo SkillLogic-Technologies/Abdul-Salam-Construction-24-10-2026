@@ -1,0 +1,492 @@
+/* ==========================================================================
+   Abdul Salam Construction — "Ospey" design system.
+   Clean, minimal, spacious: white background, big bold condensed headings,
+   large rounded image cards with dark-gradient text overlays, generous
+   whitespace, and a dark footer. Single accent color = the logo's gold
+   roof, used for buttons/arrows/dots/links; the logo's navy icon tile is
+   reserved for hover/emphasis states.
+
+   Import once, globally (see main.tsx). Site-wide component classes are
+   prefixed `vh-` so they never collide with page-specific styles.
+
+   NOTE: src/Hero.tsx and src/Hero.css are intentionally out of scope — the
+   hero defines its own scoped dark palette under `.veloura { ... }` and is
+   unaffected by anything in this file.
+   ========================================================================== */
+
+:root {
+  /* Fonts — Archivo (condensed cuts) for big/bold headings, matching the
+     Ospey reference's tight, heavy display type; Manrope stays for all
+     body/UI text. --vh-font-serif is kept only as a legacy alias (no
+     component should reach for it going forward — accent words inside
+     headings now render in the same condensed sans, just blue). */
+  --vh-font-sans: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --vh-font-display: 'Archivo', 'Archivo Expanded', 'Manrope', system-ui, sans-serif;
+  --vh-font-serif: 'Archivo', 'Manrope', system-ui, sans-serif;
+
+  /* Core palette — plain white background, near-black default/body text. */
+  --vh-bg: #ffffff;
+  --vh-bg-raised: #f5f6f8;
+  --vh-ink: #0f1420;
+  --vh-muted: #6b7280;
+  --vh-faint: #6b7280;
+
+  /* Brand accent — logo's gold roof (buttons/arrows/dots/links) and deep
+     navy (hover/emphasis, matches the logo's icon tile). */
+  --vh-accent: #C9A24A;
+  --vh-accent-hover: #B38D3A;
+  --vh-accent-deep: #1B2A41;
+  --vh-accent-tint: #f7f0e1;
+
+  /* Surfaces */
+  --vh-glass: #ffffff;
+  --vh-glass-hover: #f5f6f8;
+  --vh-glass-border: #e6e9ef;
+  --vh-card-bg: #ffffff;
+
+  /* Footer (dark) */
+  --vh-footer-bg: #0a1020;
+  --vh-footer-ink: #c3cad6;
+  --vh-footer-faint: #8891a0;
+
+  /* Spacing scale (generous, calm) */
+  --vh-space-xs: 0.5rem;
+  --vh-space-sm: 1rem;
+  --vh-space-md: 1.75rem;
+  --vh-space-lg: 3rem;
+  --vh-space-xl: 5rem;
+  --vh-space-2xl: 8rem;
+
+  /* Motion */
+  --vh-ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* -------------------------------------------------------------------------
+   Eyebrow / label — small uppercase label in accent blue with a leading
+   dot, no pill/border chrome — matches the reference's plain "◦ LABEL"
+   treatment above section headings.
+   ------------------------------------------------------------------------- */
+.vh-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  font-family: var(--vh-font-sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--vh-accent);
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.vh-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--vh-accent);
+  flex-shrink: 0;
+}
+
+/* -------------------------------------------------------------------------
+   Headings — big, bold, tightly-tracked condensed display type (dark on
+   white). A wrapped word (<em>/.vh-accent) picks up the brand blue, same
+   weight and font as the rest of the heading — no italics, no serif switch
+   — matching the reference's plain two-tone title treatment.
+   ------------------------------------------------------------------------- */
+.vh-heading {
+  font-family: var(--vh-font-display);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  color: var(--vh-ink);
+}
+
+/* Single consistent large heading size, used for every section title
+   site-wide (via SectionHeading.tsx and the few standalone <h2 class="vh-heading">
+   headings) instead of each call site repeating its own ad-hoc Tailwind
+   breakpoint tuple — that drift (text-4xl sm:5xl vs text-4xl sm:5xl md:6xl
+   vs the full lg:7xl scale) was why some titles read visibly smaller than
+   others despite all being "section headings." A fluid clamp() (rather
+   than fixed breakpoint steps) scales continuously with viewport width, so
+   a long title (e.g. "Why Homeowners & Businesses Trust Us") naturally
+   shrinks a bit sooner than a short one needs to — the closest a pure-CSS
+   rule can get to "fit this specific string on one line" without
+   per-string JS measurement. text-wrap: balance further evens out the
+   line lengths on the rare viewport where a long title still wraps. */
+.vh-heading-size {
+  font-size: clamp(2rem, 1.1rem + 4.2vw, 4.5rem);
+  text-wrap: balance;
+}
+
+.vh-heading em,
+.vh-heading .vh-accent {
+  font-family: inherit;
+  font-style: normal;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  color: var(--vh-accent);
+}
+
+.vh-subtext {
+  font-family: var(--vh-font-sans);
+  font-weight: 400;
+  color: var(--vh-muted);
+  line-height: 1.65;
+}
+
+/* Consistent description/sub-title size paired with .vh-heading-size —
+   same fluid-scale idea, smaller range, plus a slightly tighter line-height
+   so a description that does wrap reads as ~1.5 lines rather than a full
+   loose paragraph. */
+.vh-subtext-size {
+  font-size: clamp(0.9375rem, 0.85rem + 0.4vw, 1.125rem);
+  line-height: 1.5;
+}
+
+/* Heading accent rule — a short blue dash. Kept minimal (no fading tail)
+   to match the reference's plain, understated section-heading underline. */
+.vh-heading-rule {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 40px;
+  height: 4px;
+  margin: 1.25rem auto 0;
+}
+
+.vh-heading-rule::before {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--vh-accent);
+  flex-shrink: 0;
+}
+
+.vh-heading-rule::after {
+  content: none;
+}
+
+.vh-heading-rule.is-left {
+  margin-left: 0;
+}
+
+/* -------------------------------------------------------------------------
+   Pill button/chip — solid blue fill, white text, pill-shaped, darkens to
+   deep navy on hover. Matches the reference's primary CTA treatment.
+   ------------------------------------------------------------------------- */
+.vh-btn-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6em;
+  font-family: var(--vh-font-sans);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: #ffffff;
+  background: var(--vh-accent);
+  border: 1px solid var(--vh-accent);
+  border-radius: 999px;
+  padding: 0.95em 1.7em;
+  cursor: pointer;
+  transition: background 0.25s var(--vh-ease), transform 0.25s var(--vh-ease), border-color 0.25s var(--vh-ease), box-shadow 0.25s var(--vh-ease);
+  box-shadow: 0 8px 20px rgba(201, 162, 74, 0.22);
+}
+
+.vh-btn-pill:hover {
+  background: var(--vh-accent-deep);
+  border-color: var(--vh-accent-deep);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 26px rgba(201, 162, 74, 0.28);
+}
+
+.vh-btn-pill:active {
+  transform: translateY(0);
+}
+
+/* Solid variant — same pill shape, deep navy fill for emphasis CTAs */
+.vh-btn-pill-solid {
+  background: var(--vh-accent-deep);
+  color: #ffffff;
+  border-color: var(--vh-accent-deep);
+  box-shadow: 0 8px 20px rgba(201, 162, 74, 0.22);
+}
+
+.vh-btn-pill-solid:hover {
+  background: #001f40;
+  border-color: #001f40;
+}
+
+/* Outline variant — white bg, thin border + ink text (the reference's
+   "secondary" pill: white with a thin border rather than an ink fill). */
+.vh-btn-pill-outline {
+  background: #ffffff;
+  color: var(--vh-ink);
+  border-color: var(--vh-glass-border);
+  box-shadow: none;
+}
+
+.vh-btn-pill-outline:hover {
+  background: var(--vh-bg-raised);
+  color: var(--vh-accent);
+  border-color: var(--vh-accent);
+}
+
+/* Round icon button — filled blue circle, used for carousel arrows and
+   similar compact icon-only controls, per the reference. */
+.vh-btn-icon-round {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  background: var(--vh-accent);
+  color: #ffffff;
+  border: 1px solid var(--vh-accent);
+  cursor: pointer;
+  transition: background 0.25s var(--vh-ease), transform 0.25s var(--vh-ease), box-shadow 0.25s var(--vh-ease);
+  box-shadow: 0 8px 20px rgba(201, 162, 74, 0.22);
+}
+
+.vh-btn-icon-round:hover {
+  background: var(--vh-accent-deep);
+  border-color: var(--vh-accent-deep);
+  transform: translateY(-1px);
+}
+
+.vh-btn-icon-round.is-outline {
+  background: #ffffff;
+  color: var(--vh-ink);
+  border-color: var(--vh-glass-border);
+  box-shadow: none;
+}
+
+.vh-btn-icon-round.is-outline:hover {
+  background: var(--vh-bg-raised);
+  color: var(--vh-accent);
+  border-color: var(--vh-accent);
+}
+
+/* -------------------------------------------------------------------------
+   Card — paper surface, hairline border, large rounded corners, near-flat
+   until hovered. Matches the reference's generous card radius.
+   ------------------------------------------------------------------------- */
+.vh-card-glass {
+  background: var(--vh-card-bg);
+  border: 1px solid var(--vh-glass-border);
+  border-radius: 24px;
+  box-shadow: 0 1px 2px rgba(15, 20, 32, 0.04);
+}
+
+/* Large rounded image card with a dark-gradient-to-transparent scrim at the
+   bottom and a white text overlay — the reference's signature property
+   card. A price/status chip sits top-left over the image. */
+.vh-image-card {
+  position: relative;
+  border-radius: 28px;
+  overflow: hidden;
+  background: var(--vh-bg-raised);
+}
+
+.vh-image-card__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(10, 16, 32, 0.92) 0%, rgba(10, 16, 32, 0.55) 32%, rgba(10, 16, 32, 0.15) 58%, rgba(10, 16, 32, 0) 80%);
+  pointer-events: none;
+}
+
+.vh-image-card__chip {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  font-family: var(--vh-font-sans);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--vh-ink);
+  background: #ffffff;
+  border-radius: 999px;
+  padding: 0.5em 1em;
+  box-shadow: 0 6px 16px rgba(15, 20, 32, 0.16);
+}
+
+.vh-image-card__overlay {
+  position: relative;
+  z-index: 1;
+  color: #ffffff;
+}
+
+/* -------------------------------------------------------------------------
+   Custom range-input styling (native <input type="range"> pseudo-elements
+   can't be reached with Tailwind utility classes, hence plain CSS here) —
+   slim track, blue filled progress (set inline per-value by the
+   component), and a clean round blue thumb with a soft shadow that grows
+   slightly on hover/active for tactile feedback.
+   ------------------------------------------------------------------------- */
+.vh-range {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 999px;
+  outline: none;
+  background: var(--vh-glass-border);
+}
+
+.vh-range::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 999px;
+  background: transparent;
+}
+
+.vh-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: -7px;
+  border-radius: 50%;
+  background: var(--vh-accent);
+  border: 3px solid #ffffff;
+  box-shadow: 0 2px 8px rgba(201, 162, 74, 0.4), 0 0 0 1px rgba(201, 162, 74, 0.15);
+  cursor: pointer;
+  transition: transform 0.2s var(--vh-ease), box-shadow 0.2s var(--vh-ease);
+}
+
+.vh-range::-webkit-slider-thumb:hover {
+  transform: scale(1.12);
+  box-shadow: 0 4px 14px rgba(201, 162, 74, 0.5), 0 0 0 6px rgba(201, 162, 74, 0.12);
+}
+
+.vh-range:active::-webkit-slider-thumb {
+  transform: scale(1.05);
+}
+
+.vh-range::-moz-range-track {
+  height: 6px;
+  border-radius: 999px;
+  background: transparent;
+}
+
+.vh-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--vh-accent);
+  border: 3px solid #ffffff;
+  box-shadow: 0 2px 8px rgba(201, 162, 74, 0.4), 0 0 0 1px rgba(201, 162, 74, 0.15);
+  cursor: pointer;
+  transition: transform 0.2s var(--vh-ease), box-shadow 0.2s var(--vh-ease);
+}
+
+.vh-range::-moz-range-thumb:hover {
+  transform: scale(1.12);
+}
+
+/* Tab-content entrance — a small fade + rise, replayed by giving the
+   wrapper a fresh `key` (React remounts it) on every tab switch. Kept
+   short and subtle so it reads as "content refreshed" rather than a
+   flashy page transition. */
+@keyframes vh-tab-fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.vh-tab-fade {
+  animation: vh-tab-fade-in 0.35s var(--vh-ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vh-tab-fade {
+    animation: none;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   Horizontal-scroll affordance — a soft fade at both edges of a
+   horizontally-scrolling strip (tab bars, chip rows) so a viewport that
+   can't show every item hints "there's more, swipe" instead of just
+   clipping the last item's edge with no visual cue. Pure CSS mask, no JS
+   scroll-position tracking needed — always shows both edges faded; the
+   scroll container's own overscroll naturally stops the fade from hiding
+   content once you're at either end. Mobile-only (sm:) since desktop rows
+   normally fit without needing the hint. */
+.vh-scroll-fade {
+  -webkit-mask-image: linear-gradient(to right, transparent 0, black 20px, black calc(100% - 40px), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, black 20px, black calc(100% - 40px), transparent 100%);
+}
+
+@media (min-width: 640px) {
+  .vh-scroll-fade {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}
+
+/* Wrap a .vh-scroll-fade strip in an element with this class (position:
+   relative) to add a small pulsing chevron badge pinned to the right edge
+   — a more universally-recognized "more content, swipe" cue than the mask
+   fade alone (that fade reads as a hard clip at a glance on a real
+   device). Mobile-only, purely decorative (aria-hidden'd where used),
+   fades out entirely once the strip is scrolled to its end. */
+.vh-scroll-hint {
+  position: relative;
+}
+
+.vh-scroll-hint::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 2px;
+  width: 22px;
+  height: 22px;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  background: var(--vh-accent) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='9 6 15 12 9 18'/%3E%3C/svg%3E") center/12px no-repeat;
+  box-shadow: 0 2px 8px rgba(201, 162, 74, 0.4);
+  animation: vh-scroll-hint-pulse 1.8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes vh-scroll-hint-pulse {
+  0%, 100% { transform: translateY(-50%) translateX(0); opacity: 1; }
+  50% { transform: translateY(-50%) translateX(3px); opacity: 0.7; }
+}
+
+@media (min-width: 640px) {
+  .vh-scroll-hint::after {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vh-scroll-hint::after {
+    animation: none;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   Global surface helpers
+   ------------------------------------------------------------------------- */
+.vh-surface {
+  background: var(--vh-bg);
+  color: var(--vh-ink);
+}
+
+.vh-surface-alt {
+  background: var(--vh-bg-raised);
+  color: var(--vh-ink);
+}
+
+.vh-divider {
+  border-color: var(--vh-glass-border);
+}

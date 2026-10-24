@@ -1,6 +1,5 @@
 import React from 'react';
 import { ArrowRight, Loader2 } from 'lucide-react';
-import { motion, HTMLMotionProps } from 'motion/react';
 
 interface ButtonBaseProps {
   variant?: 'primary' | 'secondary' | 'outline' | 'white' | 'dark' | 'ghost';
@@ -14,9 +13,12 @@ interface ButtonBaseProps {
 }
 
 export type ButtonProps = ButtonBaseProps &
-  Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, keyof ButtonBaseProps> &
-  Omit<HTMLMotionProps<'button'>, keyof ButtonBaseProps | 'children'>;
+  Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, keyof ButtonBaseProps>;
 
+// Studio Minimal button: sharp pill shape, uppercase label, a bottom-up fill
+// sweep on hover done in pure CSS (no per-frame JS) — plain transform/opacity
+// transitions only, kept off any animation library so a row of these never
+// costs more than a couple of composited layers.
 export const Button: React.FC<ButtonProps> = ({
   variant = 'primary',
   size = 'md',
@@ -25,77 +27,91 @@ export const Button: React.FC<ButtonProps> = ({
   href,
   className = '',
   children,
-  onClick,
   disabled,
   ...props
 }) => {
   const baseStyles =
-    'relative inline-flex items-center justify-center font-heading font-bold transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer select-none group overflow-hidden';
+    'group relative inline-flex items-center justify-center overflow-hidden font-sans font-medium transition-[background-color,border-color,color,transform,box-shadow] duration-200 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brick)]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--canvas)] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer select-none rounded-full hover:-translate-y-px active:translate-y-0';
 
   const sizeStyles = {
-    sm: 'px-3.5 py-1.5 text-xs uppercase tracking-wider',
-    md: 'px-5 py-2.5 text-xs sm:text-sm uppercase tracking-wider',
-    lg: 'px-7 py-3.5 text-sm sm:text-base uppercase tracking-wider'
+    sm: 'h-11 px-5 text-[13px] uppercase tracking-[0.06em]',
+    md: 'h-14 px-8 text-[15px] uppercase tracking-[0.06em]',
+    lg: 'h-16 px-10 text-base uppercase tracking-[0.06em]'
   };
 
-  const variantStyles = {
-    primary:
-      'bg-[#E58A1F] hover:bg-[#C87514] text-white border border-[#E58A1F] focus:ring-[#E58A1F] shadow-sm hover:shadow-md hover:shadow-[#E58A1F]/20',
-    secondary:
-      'bg-[#0B1B3D] hover:bg-[#07132B] text-white border border-[#0B1B3D] focus:ring-[#0B1B3D] shadow-sm hover:shadow-md hover:shadow-[#0B1B3D]/30',
-    outline:
-      'border-2 border-[#0B1B3D] text-[#0B1B3D] bg-transparent hover:bg-[#0B1B3D] hover:text-white focus:ring-[#0B1B3D] shadow-sm',
-    white:
-      'bg-white text-[#0B1B3D] hover:bg-[#F8FAFC] border border-gray-200 focus:ring-white shadow-sm hover:shadow-md',
-    dark:
-      'bg-[#070F1E] hover:bg-[#0B1B3D] text-white border border-[#1E3A5F] hover:border-[#E58A1F] focus:ring-[#E58A1F] shadow-sm',
-    ghost:
-      'text-[#0B1B3D] hover:text-[#E58A1F] hover:bg-[#E58A1F]/10'
+  const variantConfig: Record<
+    string,
+    { base: string; text: string; sweep: string }
+  > = {
+    primary: {
+      base: 'bg-[var(--brick)] border border-[var(--brick)] shadow-[0_8px_20px_rgba(201, 162, 74,0.22)]',
+      text: 'text-white',
+      sweep: 'bg-[var(--brick-deep)]'
+    },
+    secondary: {
+      base: 'bg-transparent border border-[var(--brick)]',
+      text: 'text-[var(--brick)] group-hover:text-white',
+      sweep: 'bg-[var(--brick)]'
+    },
+    outline: {
+      base: 'bg-transparent border border-[var(--line)]',
+      text: 'text-[var(--ink)] group-hover:text-white',
+      sweep: 'bg-[var(--ink)]'
+    },
+    white: {
+      base: 'bg-white border border-[var(--line)]',
+      text: 'text-[var(--ink)]',
+      sweep: 'bg-[var(--canvas-alt)]'
+    },
+    dark: {
+      base: 'bg-[var(--brass)] border border-[var(--brass)]',
+      text: 'text-white',
+      sweep: 'bg-[#050810]'
+    },
+    ghost: {
+      base: 'bg-transparent',
+      text: 'text-[var(--brick)] group-hover:text-[var(--brick-deep)]',
+      sweep: 'bg-transparent'
+    }
   };
+
+  const cfg = variantConfig[variant];
 
   const content = (
     <>
-      {/* Subtle glossy sheen sweep on hover */}
-      <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out bg-gradient-to-r from-transparent via-white/15 to-transparent pointer-events-none" />
-
-      {isLoading ? (
-        <Loader2 className="w-4 h-4 mr-2 animate-spin relative z-10" />
-      ) : null}
-      
-      <span className="relative z-10">{children}</span>
-      
+      {variant !== 'ghost' && (
+        <span
+          aria-hidden
+          className={`absolute inset-0 origin-bottom scale-y-0 transition-transform duration-300 ease-[cubic-bezier(.16,1,.3,1)] group-hover:scale-y-100 ${cfg.sweep}`}
+        />
+      )}
+      {isLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin relative z-10" /> : null}
+      <span className={`relative z-10 inline-flex items-center ${cfg.text}`}>{children}</span>
       {showArrow && !isLoading && (
-        <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-200 ease-out group-hover:translate-x-1.5 relative z-10" />
+        <ArrowRight
+          className={`relative z-10 w-4 h-4 ml-2 transition-transform duration-200 ease-out group-hover:translate-x-1.5 ${cfg.text}`}
+        />
       )}
     </>
   );
 
+  const sharedClassName = `${baseStyles} ${sizeStyles[size]} ${cfg.base} ${className}`;
+
   if (href) {
     return (
-      <motion.a
-        href={href}
-        whileHover={{ scale: 1.025, y: -1 }}
-        whileTap={{ scale: 0.975, y: 0 }}
-        transition={{ duration: 0.15, ease: 'easeOut' }}
-        className={`${baseStyles} ${sizeStyles[size]} ${variantStyles[variant]} ${className}`}
-        onClick={onClick as unknown as React.MouseEventHandler<HTMLAnchorElement>}
-      >
+      <a href={href} className={sharedClassName} onClick={props.onClick as unknown as React.MouseEventHandler<HTMLAnchorElement>}>
         {content}
-      </motion.a>
+      </a>
     );
   }
 
   return (
-    <motion.button
-      whileHover={disabled || isLoading ? undefined : { scale: 1.025, y: -1 }}
-      whileTap={disabled || isLoading ? undefined : { scale: 0.975, y: 0 }}
-      transition={{ duration: 0.15, ease: 'easeOut' }}
-      className={`${baseStyles} ${sizeStyles[size]} ${variantStyles[variant]} ${className}`}
+    <button
+      className={sharedClassName}
       disabled={disabled || isLoading}
-      onClick={onClick}
       {...props}
     >
       {content}
-    </motion.button>
+    </button>
   );
 };

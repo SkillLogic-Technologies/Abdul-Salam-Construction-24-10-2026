@@ -1,0 +1,79 @@
+/* Veloura Heights hero — all rules scoped under .veloura so nothing leaks into your app */
+.veloura{
+  --ink:#f6f3ee;--muted:rgba(246,243,238,.72);--faint:rgba(246,243,238,.52);
+  --glass:rgba(255,255,255,.08);--glass-brd:rgba(255,255,255,.24);
+  --sans:'Manrope',system-ui,sans-serif;--serif:'Playfair Display',Georgia,serif;
+  font-family:var(--sans);color:var(--ink);-webkit-font-smoothing:antialiased;
+}
+.veloura *{margin:0;padding:0;box-sizing:border-box}
+
+.veloura .stage{position:relative;height:320vh}
+.veloura .viewport{position:sticky;top:0;height:100vh;width:100%;overflow:hidden;background:#0a0a0c}
+
+/* translateZ(0) forces its own GPU compositor layer so every canvas redraw
+   (every animation frame during scroll) is isolated to this layer instead of
+   forcing the browser to repaint the .veil gradient / text layers stacked on
+   top of it each time. This is the single biggest paint-cost item in the
+   hero, since the canvas redraws every frame the lerp hasn't settled. */
+.veloura #seq{position:absolute;inset:0;width:100%;height:100%;display:block;transform:translateZ(0);will-change:transform}
+.veloura .veil{position:absolute;inset:0;pointer-events:none;
+  background:
+    linear-gradient(90deg,rgba(8,10,14,.66) 0%,rgba(8,10,14,.24) 42%,rgba(8,10,14,0) 68%),
+    linear-gradient(0deg,rgba(8,10,14,.72) 0%,rgba(8,10,14,0) 40%),
+    linear-gradient(180deg,rgba(8,10,14,.34) 0%,rgba(8,10,14,0) 24%);}
+
+.veloura .scrub{position:absolute;left:0;bottom:0;height:3px;width:100%;background:rgba(255,255,255,.12);z-index:18}
+/* width:100% + scaleX (compositor-only) instead of animating `width` from JS,
+   which forces layout+paint every scroll frame. transform-origin pins the
+   scale to the left edge so it still reads as a fill-from-left progress bar. */
+.veloura .scrub i{display:block;height:100%;width:100%;transform:scaleX(0);transform-origin:0 50%;background:linear-gradient(90deg,#ffd79a,#f6f3ee);box-shadow:0 0 12px rgba(255,215,154,.6);will-change:transform}
+
+.veloura .loader{position:absolute;inset:0;z-index:40;display:grid;place-items:center;background:#0a0a0c;transition:opacity .6s ease}
+.veloura .loader.hide{opacity:0;pointer-events:none}
+.veloura .loader .ring{width:34px;height:34px;border-radius:50%;border:2px solid rgba(255,255,255,.15);border-top-color:var(--ink);animation:veloura-spin 1s linear infinite}
+.veloura .loader p{position:absolute;bottom:38%;font-size:11px;letter-spacing:.34em;color:var(--faint)}
+@keyframes veloura-spin{to{transform:rotate(360deg)}}
+
+/* No static will-change here (deliberately) — .hero finishes its
+   fade/rise by p=0.62 and then sits fully static for the remaining ~38%
+   of the 320vh scroll. A layer held for that whole time is a standing
+   compositor cost paid for nothing; Hero.tsx toggles will-change via JS
+   for only the window it's actually animating (see heroSettled). */
+.veloura .hero{position:absolute;z-index:15;left:clamp(22px,4vw,64px);top:50%;transform:translate3d(0,-50%,0);max-width:640px}
+.veloura .eyebrow{font-size:12px;letter-spacing:.34em;color:var(--faint);margin-bottom:26px;font-weight:500}
+.veloura h1{font-family:var(--sans);font-weight:600;line-height:.98;font-size:clamp(3.4rem,8vw,7rem);letter-spacing:-.02em;text-shadow:0 2px 40px rgba(0,0,0,.5)}
+.veloura h1 em{font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing:0}
+.veloura .sub{margin-top:24px;font-size:clamp(15px,1.5vw,19px);font-weight:300;color:var(--muted);max-width:34ch;line-height:1.5;text-shadow:0 2px 20px rgba(0,0,0,.5)}
+.veloura .cta{margin-top:38px;display:inline-flex;align-items:center;gap:14px;font-size:15px;font-weight:600;letter-spacing:.02em;color:var(--ink);cursor:pointer;padding:15px 28px;border-radius:100px;background:var(--glass);border:1px solid var(--glass-brd);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);transition:background .3s}
+.veloura .cta:hover{background:rgba(255,255,255,.18)}
+.veloura .cta svg{transition:transform .3s}
+.veloura .cta:hover svg{transform:translateX(6px)}
+
+.veloura .scroll-hint{position:absolute;z-index:15;left:clamp(22px,4vw,64px);bottom:34px;font-size:12px;letter-spacing:.3em;color:var(--faint);display:flex;align-items:center;gap:10px}
+.veloura .scroll-hint .dot{width:6px;height:6px;border-radius:50%;background:var(--ink);animation:veloura-bob 1.8s ease-in-out infinite}
+@keyframes veloura-bob{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(6px);opacity:1}}
+
+/* No static will-change (see .hero above) — .card finishes fading out by
+   p=0.54, then never changes again for the rest of the scroll. */
+.veloura .card{position:absolute;z-index:15;right:clamp(22px,4vw,48px);bottom:52px;width:min(340px,80vw);padding:24px 24px 20px;background:rgba(16,16,22,.5);border:1px solid var(--glass-brd);border-radius:18px;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.veloura .card p{font-size:14px;line-height:1.55;color:var(--muted);font-weight:300}
+.veloura .card .explore{margin-top:18px;display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:.24em;font-weight:600;color:var(--ink);cursor:pointer}
+.veloura .card .explore span{width:26px;height:26px;border:1px solid var(--glass-brd);border-radius:50%;display:grid;place-items:center;transition:background .25s}
+.veloura .card .explore:hover span{background:rgba(255,255,255,.16)}
+
+/* No static will-change (see .hero above) — .reveal only animates across
+   the final p=0.86-0.99 sliver of the scroll, then holds its end state for
+   the rest of the page's life (this section never unmounts once scrolled
+   past). Promoting it for that entire remaining lifetime is pure waste. */
+.veloura .reveal{position:absolute;z-index:15;left:50%;bottom:12vh;width:min(90vw,640px);transform:translate3d(-50%,20px,0);text-align:center;opacity:0;pointer-events:none}
+.veloura .reveal .k{font-size:12px;letter-spacing:.34em;color:var(--faint);margin-bottom:14px}
+.veloura .reveal h2{font-family:var(--serif);font-weight:500;font-size:clamp(1.6rem,3.4vw,2.8rem);line-height:1.15;text-shadow:0 2px 40px rgba(0,0,0,.6)}
+.veloura .reveal h2 em{font-style:italic}
+
+@media (max-width:820px){
+  .veloura .card{display:none}
+  .veloura .hero{top:40%}
+}
+@media (prefers-reduced-motion:reduce){
+  .veloura .scroll-hint .dot{animation:none}
+}

@@ -229,4 +229,4 @@ A5: Exclusions comprise: external boundary wall, deep borewell and submersible p
 - Base District: Sant Ravidas Nagar (Bhadohi District), Uttar Pradesh, India
 - Head Office Landmark: Opposite H.P. Petrol Pump, Aurai Road, Rajpura Colony Phase-II, Bhadohi – 221401
 - Coordinates: 25.3956° N, 82.5698° E (ICBM: 25.3956, 82.5698)
-- Active Site Service Locations: Bhadohi City, Aurai Road Corridor, Gyanpur Administrative Headquarters, Gopiganj GT Road (NH-19), Suriyawan, Khamaria, and adjacent regional corridors across Sant Ravidas Nagar district.
+- Active Site Service Areas: Bhadohi, Mirzapur, Jaunpur, Varanasi, and Prayagraj, and the wider Purwanchal region — including Bhadohi City, Aurai Road Corridor, Gyanpur Administrative Headquarters, Gopiganj GT Road (NH-19), Suriyawan, Khamaria, and adjacent regional corridors across Sant Ravidas Nagar district.

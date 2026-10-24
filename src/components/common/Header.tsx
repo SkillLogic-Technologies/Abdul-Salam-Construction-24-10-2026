@@ -1,23 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import {
-  ChevronDown,
-  Menu,
-  X,
-  ArrowRight,
-  Home,
-  Compass,
-  Hammer,
-  Building2,
-  Layers,
-  Paintbrush,
-  MapPin,
-  HelpCircle,
-  Calculator
-} from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Menu, X, Phone, Heart, User } from 'lucide-react';
+import gsap from 'gsap';
 import { Logo } from './Logo';
 import { Button } from './Button';
-import { NAVIGATION_ITEMS, PROMO_MESSAGES, COMPANY_DATA } from '../../data/companyData';
+import { NAVIGATION_ITEMS, COMPANY_DATA } from '../../data/companyData';
 
 interface HeaderProps {
   currentPath: string;
@@ -32,108 +18,109 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenQuoteModal,
   onOpenConsultationModal
 }) => {
-  const [promoIndex, setPromoIndex] = useState(0);
+  // Only the home page has the full-bleed Hero underneath — there the header
+  // overlays it as a fixed light frosted-glass bar; every other page keeps
+  // its normal sticky, opaque header. Both use the same light bar + ink-text
+  // styling (see the bar's className below), so the logo/nav/CTA always
+  // read as one connected unit instead of the logo needing its own card.
+  const isHomePage = currentPath === '/' || currentPath === '';
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const [mobileExpandedGroup, setMobileExpandedGroup] = useState<string | null>(null);
+  const mobileDrawerRef = useRef<HTMLDivElement>(null);
 
-  // Rotate promo bar messages
+  // Track scroll position for sticky header styling. Lenis re-fires the
+  // native `scroll` event on every one of its own rAF ticks while scrolling,
+  // so this listener can be called dozens of times per second — rAF-batch it
+  // to at most once per painted frame, and only touch React state on the
+  // actual boundary crossing, so a full Header re-render never competes with
+  // Hero's canvas redraw and Lenis's own rAF loop for the same frame budget.
   useEffect(() => {
-    const timer = setInterval(() => {
-      setPromoIndex((prev) => (prev + 1) % PROMO_MESSAGES.length);
-    }, 4500);
-    return () => clearInterval(timer);
-  }, []);
-
-  // Track scroll position for sticky header styling
-  useEffect(() => {
+    let ticking = false;
+    let lastScrolled = false;
     const handleScroll = () => {
-      if (window.scrollY > 20) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const next = window.scrollY > 20;
+        if (next !== lastScrolled) {
+          lastScrolled = next;
+          setIsScrolled(next);
+        }
+        ticking = false;
+      });
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Icon map for dropdown items
-  const renderIcon = (name?: string) => {
-    switch (name) {
-      case 'Home': return <Home className="w-4 h-4 text-[#E58A1F]" />;
-      case 'Compass': return <Compass className="w-4 h-4 text-[#E58A1F]" />;
-      case 'Hammer': return <Hammer className="w-4 h-4 text-[#E58A1F]" />;
-      case 'Building2': return <Building2 className="w-4 h-4 text-[#E58A1F]" />;
-      case 'Layers': return <Layers className="w-4 h-4 text-[#E58A1F]" />;
-      case 'Paintbrush': return <Paintbrush className="w-4 h-4 text-[#E58A1F]" />;
-      case 'MapPin': return <MapPin className="w-4 h-4 text-[#E58A1F]" />;
-      case 'HelpCircle': return <HelpCircle className="w-4 h-4 text-[#E58A1F]" />;
-      case 'Calculator': return <Calculator className="w-4 h-4 text-[#E58A1F]" />;
-      default: return <ArrowRight className="w-4 h-4 text-[#E58A1F]" />;
+  useEffect(() => {
+    const el = mobileDrawerRef.current;
+    if (!el) return;
+    if (mobileMenuOpen) {
+      // Animating to a measured pixel height, not GSAP's `height: 'auto'`.
+      // The drawer sits in-flow inside a fixed/sticky <header> (it needs to
+      // actually grow the header's box to reveal itself, so switching to a
+      // compositor-only transform like scaleY isn't safe here — the element
+      // would keep occupying its full natural height in layout while
+      // visually scaled to 0, which is worse). But 'auto' as the tween
+      // target forces GSAP to re-resolve the natural height via a fresh
+      // layout read on every single animation frame for the whole 0.3s,
+      // since 'auto' has no fixed number to interpolate toward. Reading
+      // `scrollHeight` ONCE here (a single forced reflow, same cost class
+      // as the click's own re-render that already just happened) and
+      // animating to that literal pixel value instead lets GSAP interpolate
+      // a plain number — still a layout-triggering property per frame, but
+      // without the repeated "what is auto right now" re-measurement, which
+      // was the more expensive part of the pattern DevTools flagged.
+      const targetHeight = el.scrollHeight;
+      gsap.fromTo(
+        el,
+        { height: 0, opacity: 0 },
+        { height: targetHeight, opacity: 1, duration: 0.3, ease: 'power2.out', clearProps: 'height' }
+      );
     }
-  };
+  }, [mobileMenuOpen]);
 
   const handleNavClick = (href: string) => {
-    setActiveDropdown(null);
     setMobileMenuOpen(false);
     onNavigate(href);
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full">
-      {/* 1. TOP PROMO BAR (Navy Slate with Construction Amber Accents - Full Edge to Edge) */}
-      <div className="bg-[#070F1E] border-b border-[#1E3A5F] text-white py-2 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 text-xs font-medium w-full">
-        <div className="w-full flex items-center justify-between">
-          <div className="flex items-center gap-2 overflow-hidden h-5">
-            <span className="w-2 h-2 bg-[#E58A1F] inline-block flex-shrink-0" />
-            <AnimatePresence mode="wait">
-              <motion.span
-                key={promoIndex}
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.25 }}
-                className="font-medium tracking-wide truncate max-w-xs sm:max-w-md md:max-w-xl lg:max-w-2xl text-slate-200"
-              >
-                {PROMO_MESSAGES[promoIndex]}
-              </motion.span>
-            </AnimatePresence>
-          </div>
-
-          <div className="flex items-center gap-4 flex-shrink-0">
-            <button
-              onClick={onOpenConsultationModal}
-              className="hover:text-[#E58A1F] flex items-center gap-1.5 cursor-pointer font-bold text-xs uppercase tracking-wider text-slate-100 transition-colors"
-            >
-              <span>Get a Consultation</span>
-              <ArrowRight className="w-3.5 h-3.5 text-[#E58A1F]" />
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* 2. MAIN HEADER (Edge-to-Edge with Prominent Crystal-Clear Logo) */}
+    <header
+      className={`${isHomePage ? 'fixed z-[9999]' : 'sticky z-50'} top-0 left-0 right-0 w-full`}
+    >
+      {/* Main header — a light frosted-glass bar at all times (home page
+          included). Previously the home page used a fully transparent bar
+          with white text so it blended into the Hero photo, but that made
+          the (necessarily light-backed) logo look like a disconnected card
+          floating on top of it — nothing else in the bar shared its
+          background. A single light bar lets the logo, nav links, icons
+          and CTA all read as one connected unit, on every page. */}
       <div
-        className={`bg-white transition-all duration-200 w-full ${
-          isScrolled
-            ? 'shadow-md py-2.5 sm:py-3 border-b border-slate-200'
-            : 'py-3.5 sm:py-4.5 border-b border-slate-200'
+        className={`transition-all duration-300 w-full ${
+          !isHomePage
+            ? 'bg-[var(--canvas)]/95 backdrop-blur-md border-b border-[var(--line)] shadow-[0_1px_2px_rgba(15,20,32,0.06)] py-2.5 sm:py-3'
+            : 'bg-white/80 backdrop-blur-md border-b border-white/40 shadow-[0_2px_16px_rgba(10,16,32,0.12)] py-3 sm:py-3.5'
         }`}
       >
         <div className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 flex items-center justify-between">
-          {/* Brand Logo & Name - Large & Highly Visible */}
+          {/* Brand Logo & Name */}
           <a
             href="/"
             onClick={(e) => {
               e.preventDefault();
               handleNavClick('/');
             }}
-            className="flex items-center gap-2 focus:outline-none group pr-4"
+            className="flex items-center gap-2 focus:outline-none group pr-2 sm:pr-4 min-w-0 flex-shrink"
             aria-label="Abdul Salam Construction Company Home"
           >
-            <Logo size={isScrolled ? 'md' : 'md'} className="transform transition-transform group-hover:scale-[1.01]" />
+            <Logo
+              variant="light"
+              size="md"
+              compactOnMobile
+              className="transform transition-transform group-hover:scale-[1.01] min-w-0"
+            />
           </a>
 
           {/* Desktop Navigation */}
@@ -144,72 +131,6 @@ export const Header: React.FC<HeaderProps> = ({
                   ? currentPath === '/'
                   : currentPath.startsWith(item.href);
 
-              if (item.hasDropdown && item.dropdownItems) {
-                return (
-                  <div
-                    key={item.name}
-                    className="relative"
-                    onMouseEnter={() => setActiveDropdown(item.name)}
-                    onMouseLeave={() => setActiveDropdown(null)}
-                  >
-                    <button
-                      onClick={() => handleNavClick(item.href)}
-                      className={`flex items-center gap-1 px-3 py-2 text-xs uppercase tracking-wider font-bold transition-colors ${
-                        isActive
-                          ? 'text-[#E58A1F] bg-[#E58A1F]/10'
-                          : 'text-[#0B1B3D] hover:text-[#E58A1F] hover:bg-slate-50'
-                      }`}
-                    >
-                      <span>{item.name}</span>
-                      <ChevronDown
-                        className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                          activeDropdown === item.name ? 'rotate-180 text-[#E58A1F]' : 'text-slate-400'
-                        }`}
-                      />
-                    </button>
-
-                    {/* Animated Dropdown Menu */}
-                    <AnimatePresence>
-                      {activeDropdown === item.name && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 6, scale: 0.99 }}
-                          animate={{ opacity: 1, y: 0, scale: 1 }}
-                          exit={{ opacity: 0, y: 4, scale: 0.99 }}
-                          transition={{ duration: 0.15 }}
-                          className={`absolute top-full left-0 mt-1 bg-white border border-slate-200 shadow-xl p-3 z-50 ${
-                            item.dropdownItems.length > 4 ? 'w-80 sm:w-[480px] grid grid-cols-2 gap-2' : 'w-72'
-                          }`}
-                        >
-                          {item.dropdownItems.map((dropItem) => (
-                            <a
-                              key={dropItem.name}
-                              href={dropItem.href}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                handleNavClick(dropItem.href);
-                              }}
-                              className="group flex items-start gap-3 p-2.5 hover:bg-[#E58A1F]/5 transition-colors border border-transparent hover:border-[#E58A1F]/20"
-                            >
-                              <div className="mt-0.5 p-1.5 bg-slate-100 group-hover:bg-[#E58A1F]/10 text-[#E58A1F] transition-colors">
-                                {renderIcon(dropItem.icon)}
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <p className="text-xs font-bold text-[#0B1B3D] group-hover:text-[#E58A1F] transition-colors">
-                                  {dropItem.name}
-                                </p>
-                                <p className="text-[11px] text-slate-500 line-clamp-2 mt-0.5">
-                                  {dropItem.description}
-                                </p>
-                              </div>
-                            </a>
-                          ))}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                );
-              }
-
               return (
                 <a
                   key={item.name}
@@ -218,32 +139,47 @@ export const Header: React.FC<HeaderProps> = ({
                     e.preventDefault();
                     handleNavClick(item.href);
                   }}
-                  className={`px-3 py-2 text-xs uppercase tracking-wider font-bold transition-colors ${
+                  className={`relative px-3.5 py-2.5 text-xs uppercase tracking-wider font-bold transition-all rounded-full ${
                     isActive
-                      ? 'text-[#E58A1F] bg-[#E58A1F]/10'
-                      : 'text-[#0B1B3D] hover:text-[#E58A1F] hover:bg-slate-50'
+                      ? 'text-[var(--brick)]'
+                      : 'text-[var(--ink)] hover:text-[var(--brick)] hover:bg-[var(--canvas-alt)]'
                   }`}
                 >
                   {item.name}
+                  {isActive && (
+                    <span className="absolute left-3.5 right-3.5 -bottom-0.5 h-[2px] rounded-full bg-[var(--brick)]" />
+                  )}
                 </a>
               );
             })}
           </nav>
 
-          {/* Right Action: GET A QUOTE CTA */}
-          <div className="hidden sm:flex items-center gap-3">
-            <Button
-              variant="primary"
-              size="md"
-              showArrow
-              onClick={onOpenQuoteModal}
+          {/* Right Action: wishlist + account icons, then solid clay pill CTA */}
+          <div className="hidden sm:flex items-center gap-2">
+            <button
+              type="button"
+              onClick={onOpenConsultationModal}
+              aria-label="Saved projects"
+              className="w-10 h-10 flex items-center justify-center rounded-full transition-colors cursor-pointer text-[var(--ink-soft)] hover:text-[var(--brick)] hover:bg-[var(--canvas-alt)]"
             >
-              GET A QUOTE
+              <Heart className="w-4.5 h-4.5" />
+            </button>
+            <button
+              type="button"
+              onClick={onOpenQuoteModal}
+              aria-label="Your account"
+              className="w-10 h-10 flex items-center justify-center rounded-full transition-colors cursor-pointer text-[var(--ink-soft)] hover:text-[var(--brick)] hover:bg-[var(--canvas-alt)]"
+            >
+              <User className="w-4.5 h-4.5" />
+            </button>
+            <Button variant="primary" size="sm" onClick={onOpenConsultationModal}>
+              <Phone className="w-3.5 h-3.5 mr-2" />
+              <span>Book Consultation</span>
             </Button>
           </div>
 
           {/* Mobile Hamburger Button */}
-          <div className="flex items-center gap-2 lg:hidden">
+          <div className="flex items-center gap-2 lg:hidden flex-shrink-0">
             <Button
               variant="primary"
               size="sm"
@@ -254,7 +190,7 @@ export const Header: React.FC<HeaderProps> = ({
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-[#0B1B3D] hover:text-[#E58A1F] hover:bg-slate-100 focus:outline-none"
+              className="p-2.5 focus:outline-none rounded-full transition-colors text-[var(--ink-soft)] hover:text-[var(--brick)] hover:bg-[var(--canvas-alt)]"
               aria-label="Toggle navigation menu"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -263,124 +199,75 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
 
-      {/* 3. ANIMATED MOBILE DRAWER MENU */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.2 }}
-            className="lg:hidden bg-white border-b border-slate-200 shadow-xl overflow-hidden"
-          >
-            <div className="px-4 pt-3 pb-6 space-y-1 divide-y divide-slate-100 max-h-[80vh] overflow-y-auto">
-              <div className="py-2 space-y-1">
-                {NAVIGATION_ITEMS.map((item) => {
-                  const isActive =
-                    item.href === '/'
-                      ? currentPath === '/'
-                      : currentPath.startsWith(item.href);
+      {/* Mobile drawer menu */}
+      {mobileMenuOpen && (
+        <div
+          ref={mobileDrawerRef}
+          className="lg:hidden bg-[var(--canvas)] border-b border-[var(--line)] shadow-[0_20px_50px_rgba(15,20,32,0.12)] overflow-hidden"
+        >
+          <div className="px-4 pt-3 pb-6 space-y-1 divide-y divide-[var(--line)] max-h-[80vh] overflow-y-auto">
+            <div className="py-2 space-y-1">
+              {NAVIGATION_ITEMS.map((item) => {
+                const isActive =
+                  item.href === '/'
+                    ? currentPath === '/'
+                    : currentPath.startsWith(item.href);
 
-                  if (item.hasDropdown && item.dropdownItems) {
-                    const isExpanded = mobileExpandedGroup === item.name;
-                    return (
-                      <div key={item.name} className="py-1">
-                        <button
-                          onClick={() =>
-                            setMobileExpandedGroup(isExpanded ? null : item.name)
-                          }
-                          className={`w-full flex items-center justify-between px-3 py-2.5 text-xs uppercase tracking-wider font-bold ${
-                            isActive
-                              ? 'text-[#E58A1F] bg-[#E58A1F]/10'
-                              : 'text-[#0B1B3D] hover:bg-slate-50'
-                          }`}
-                        >
-                          <span>{item.name}</span>
-                          <ChevronDown
-                            className={`w-4 h-4 transition-transform duration-200 ${
-                              isExpanded ? 'rotate-180 text-[#E58A1F]' : 'text-slate-400'
-                            }`}
-                          />
-                        </button>
+                return (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleNavClick(item.href);
+                    }}
+                    className={`block px-3.5 py-3 text-xs uppercase tracking-wider font-bold rounded-xl ${
+                      isActive
+                        ? 'text-[var(--brick)] bg-[var(--canvas-alt)]'
+                        : 'text-[var(--ink)] hover:bg-[var(--canvas-alt)]'
+                    }`}
+                  >
+                    {item.name}
+                  </a>
+                );
+              })}
+            </div>
 
-                        {isExpanded && (
-                          <div className="pl-4 pr-2 py-1 space-y-1 bg-slate-50 mt-1 border-l-2 border-[#E58A1F]">
-                            {item.dropdownItems.map((dropItem) => (
-                              <a
-                                key={dropItem.name}
-                                href={dropItem.href}
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  handleNavClick(dropItem.href);
-                                }}
-                                className="flex items-center gap-2.5 py-2 px-2 text-xs font-semibold text-slate-700 hover:text-[#E58A1F]"
-                              >
-                                {renderIcon(dropItem.icon)}
-                                <span>{dropItem.name}</span>
-                              </a>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  }
+            {/* Mobile CTA Buttons & Office Info */}
+            <div className="pt-4 space-y-3">
+              <Button
+                variant="primary"
+                size="md"
+                showArrow
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onOpenQuoteModal();
+                }}
+                className="w-full justify-center"
+              >
+                GET A FREE QUOTE
+              </Button>
 
-                  return (
-                    <a
-                      key={item.name}
-                      href={item.href}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleNavClick(item.href);
-                      }}
-                      className={`block px-3 py-2.5 text-xs uppercase tracking-wider font-bold ${
-                        isActive
-                          ? 'text-[#E58A1F] bg-[#E58A1F]/10'
-                          : 'text-[#0B1B3D] hover:bg-slate-50'
-                      }`}
-                    >
-                      {item.name}
-                    </a>
-                  );
-                })}
-              </div>
+              <Button
+                variant="outline"
+                size="md"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onOpenConsultationModal();
+                }}
+                className="w-full justify-center text-xs"
+              >
+                REQUEST SITE CONSULTATION
+              </Button>
 
-              {/* Mobile CTA Buttons & Office Info */}
-              <div className="pt-4 space-y-3">
-                <Button
-                  variant="primary"
-                  size="md"
-                  showArrow
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    onOpenQuoteModal();
-                  }}
-                  className="w-full justify-center"
-                >
-                  GET A FREE QUOTE
-                </Button>
-
-                <Button
-                  variant="outline"
-                  size="md"
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    onOpenConsultationModal();
-                  }}
-                  className="w-full justify-center text-xs"
-                >
-                  REQUEST SITE CONSULTATION
-                </Button>
-
-                <div className="text-center pt-2 text-xs text-slate-500">
-                  <p className="font-semibold text-slate-800">Office Location:</p>
-                  <p>{COMPANY_DATA.address.fullAddress}</p>
-                </div>
+              <div className="text-center pt-2 text-xs text-[var(--ink-soft)]">
+                <p className="font-semibold text-[var(--ink)]">Office Location:</p>
+                <p>{COMPANY_DATA.address.fullAddress}</p>
               </div>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+        </div>
+      )}
     </header>
   );
 };

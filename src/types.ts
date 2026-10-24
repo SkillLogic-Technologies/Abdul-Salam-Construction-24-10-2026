@@ -37,13 +37,6 @@ export interface NavigationItem {
   name: string;
   href: string;
   description?: string;
-  hasDropdown?: boolean;
-  dropdownItems?: {
-    name: string;
-    href: string;
-    description: string;
-    icon?: string;
-  }[];
 }
 
 export interface Service {

@@ -2,143 +2,211 @@
 
 @layer base {
   :root {
-    --font-heading: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    
-    /* Brand Colors derived from Official Logo */
-    --color-brand-navy: #0B1B3D;
-    --color-brand-navy-dark: #070F1E;
-    --color-brand-navy-surface: #0A1628;
-    --color-brand-amber: #E58A1F;
-    --color-brand-amber-hover: #C87514;
-    --color-brand-gold: #F59E0B;
+    /* Abdul Salam Construction — "Ospey" theme. White background, big bold
+       condensed headings, single gold accent (matches the company logo's
+       roof). Archivo (condensed) for headings/display type, Manrope for
+       body/UI (see theme.css for the full token set + the vh-* component
+       classes). NOTE: Hero.tsx / Hero.css define their own scoped dark
+       palette under .veloura and are unaffected by these tokens. */
+    --font-heading: 'Archivo', 'Archivo Expanded', 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-sans: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-accent: 'Archivo', 'Manrope', system-ui, sans-serif;
+
+    /* Ospey system — white base, near-black default text, brand gold
+       accent (--brick, matches the logo's gold roof) for buttons/arrows/
+       dots/links, brand navy (--brick-deep, matches the logo's icon tile)
+       for hover/emphasis. */
+    --canvas: #ffffff;
+    --canvas-alt: #f5f6f8;
+    --ink: #0f1420;
+    --ink-soft: #0f1420;
+    --brick: #C9A24A;
+    --brick-deep: #1B2A41;
+    --brass: #1B2A41;
+    --concrete: #6b7280;
+    --line: #e6e9ef;
+
+    /* Dark footer tokens */
+    --footer-bg: #0a1020;
+    --footer-ink: #c3cad6;
+    --footer-faint: #8891a0;
+
+    /* Semantic aliases used across components */
+    --color-ink: var(--ink);
+    --color-ink-muted: var(--ink-soft);
+    --color-hairline: var(--line);
+    --color-surface: var(--canvas);
+    --color-surface-alt: var(--canvas-alt);
+    --color-surface-tint: var(--canvas-alt);
+
+    /* Back-compat aliases (existing components reference these var names) — now point at the Ospey blue/navy system */
+    --color-navy: var(--brass);
+    --color-navy-dark: #050810;
+    --color-navy-soft: var(--brick);
+    --color-navy-line: var(--brick);
+    --color-signal: var(--brick);
+    --color-signal-hover: var(--brick-deep);
+    --color-brand-navy: var(--brass);
+    --color-brand-navy-dark: #050810;
+    --color-brand-navy-surface: var(--brass);
+    --color-brand-amber: var(--brick);
+    --color-brand-amber-hover: var(--brick-deep);
+    --color-brand-gold: var(--brick);
+    --color-brand-grey-50: var(--canvas-alt);
+    --color-brand-grey-100: var(--canvas-alt);
+    --color-brand-grey-200: var(--line);
+    --color-brand-grey-400: var(--concrete);
+    --color-brand-grey-600: var(--ink-soft);
+    --color-anchor: var(--brick-deep);
+    --color-anchor-soft: var(--brick);
+    --color-anchor-line: var(--brick);
+
+    /* Motion tokens */
+    --ease-out: cubic-bezier(.16,1,.3,1);
+    --ease-inout: cubic-bezier(.65,0,.35,1);
   }
+
+  /* Root font-size is intentionally left at the browser default (16px) — no
+     global zoom/scale factor here. Hero.tsx/Hero.css use a couple of rem
+     values internally that resolve against <html>'s font-size, so leaving
+     this untouched means Hero renders at its original, untouched pixel size
+     with zero extra protection rules needed. */
 
   body {
     font-family: var(--font-sans);
-    color: #0B1B3D;
-    background-color: #F8FAFC;
+    color: var(--ink);
+    background-color: var(--canvas);
     overflow-x: hidden;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  ::selection {
+    background: rgba(201, 162, 74, 0.25);
+    color: var(--ink);
+  }
+
+  /* Native cursor hidden only once the JS custom cursor (§5.1) confirms
+     desktop + fine pointer + no reduced-motion — never via CSS media query
+     alone, so touch/reduced-motion visitors always keep a real cursor. */
+  html.asc-custom-cursor,
+  html.asc-custom-cursor * {
+    cursor: none !important;
+  }
+
+  /* :not(.veloura *) excludes anything inside the untouched Hero — Hero.css's
+     own `.veloura h1` rule never sets `color` itself, it relies on inheriting
+     Hero's own light/cream `--ink` from the `.veloura` wrapper, so without
+     this exclusion this blue would silently override that inherited color
+     and repaint Hero's heading text blue — a real visual regression even
+     though Hero.tsx/Hero.css themselves are never edited. */
+  h1:not(.veloura *), h2:not(.veloura *), h3:not(.veloura *), h4:not(.veloura *), h5:not(.veloura *), h6:not(.veloura *) {
     font-family: var(--font-heading);
-    letter-spacing: -0.025em;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+  }
+
+  /* Accent words inside a heading (<em> or .vh-accent) stay blue — scoped
+     out of the blanket rule above via :not() rather than relying on
+     selector-specificity ordering between this file and theme.css (which
+     is loaded first and would otherwise lose a same-specificity tie to the
+     rule above, since this file is imported second in main.tsx). */
+  h1:not(.veloura *) em, h2:not(.veloura *) em, h3:not(.veloura *) em,
+  h4:not(.veloura *) em, h5:not(.veloura *) em, h6:not(.veloura *) em,
+  .vh-heading .vh-accent {
+    color: var(--brick);
   }
 }
 
-/* Geometric Grid Background Utility with Brand Construction Amber & Navy */
+/* Geometric Grid Background Utility — used sparingly as a faint texture, never a color wash */
 .bg-grid-pattern {
-  background-image: radial-gradient(circle at 2px 2px, rgba(229, 138, 31, 0.16) 1px, transparent 0);
+  background-image: radial-gradient(circle at 2px 2px, rgba(15, 20, 32, 0.06) 1px, transparent 0);
   background-size: 28px 28px;
 }
 
 .bg-grid-dark {
-  background-image: radial-gradient(circle at 2px 2px, rgba(229, 138, 31, 0.22) 1px, transparent 0);
+  background-image: radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.08) 1px, transparent 0);
   background-size: 32px 32px;
 }
 
+/* Blueprint drafting grid — 80px cells, ~30% opacity applied by the caller */
 .bg-blueprint-grid {
-  background-size: 24px 24px;
-  background-image: 
-    linear-gradient(to right, rgba(11, 27, 61, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(11, 27, 61, 0.05) 1px, transparent 1px);
+  background-size: 80px 80px;
+  background-image:
+    linear-gradient(to right, var(--line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--line) 1px, transparent 1px);
 }
 
 .bg-blueprint-dark {
-  background-size: 24px 24px;
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 80px 80px;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
 }
 
-/* Custom Scrollbar in Construction Gold & Navy */
+/* Global paper-grain overlay — fixed, pointer-none, ~4% opacity, multiply blend */
+.bg-paper-grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.035;
+  mix-blend-mode: multiply;
+}
+
+/* Custom Scrollbar in Ink & Clay */
 ::-webkit-scrollbar {
   width: 7px;
   height: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: #F1F5F9;
+  background: var(--canvas);
 }
 ::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
+  background: var(--line);
   border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #E58A1F;
+  background: var(--brick);
 }
 
-@keyframes progress {
-  0% { transform: scaleX(0); }
-  50% { transform: scaleX(0.7); }
-  100% { transform: scaleX(1); }
+/* Shared elevation utilities — near-flat rest state + gentle lift on hover,
+   used across cards/panels. Transform+opacity/shadow only (GPU-friendly). */
+.shadow-elevate {
+  box-shadow: 0 1px 2px rgba(15, 20, 32, 0.05);
+  transition: box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.animate-progress {
-  animation: progress 1.8s ease-in-out infinite;
+.shadow-elevate:hover {
+  box-shadow: 0 20px 60px -20px rgba(15, 20, 32, 0.2);
+  transform: translateY(-4px);
 }
 
-/* Cinematic Hero Animations */
-@keyframes kenBurnsSlow {
-  0% {
-    transform: scale(1) translate3d(0, 0, 0);
-  }
-  50% {
-    transform: scale(1.045) translate3d(-0.8%, -0.6%, 0);
-  }
-  100% {
-    transform: scale(1.06) translate3d(0.5%, -1%, 0);
-  }
+/* GSAP ScrollTrigger reveal defaults — elements start slightly displaced +
+   transparent via inline style/class before GSAP animates them in; this
+   class is a no-JS fallback so content is never invisible without JS. */
+.gsap-reveal {
+  opacity: 1;
 }
 
-.animate-ken-burns {
-  animation: kenBurnsSlow 18s ease-in-out infinite alternate;
-  will-change: transform;
-}
-
-@keyframes warmLightBloom {
-  0%, 100% {
-    opacity: 0.55;
-    transform: scale(0.98);
-    filter: blur(14px);
-  }
-  50% {
-    opacity: 0.92;
-    transform: scale(1.04);
-    filter: blur(18px);
+@media (prefers-reduced-motion: reduce) {
+  .gsap-reveal {
+    opacity: 1 !important;
+    transform: none !important;
   }
 }
 
-.animate-warm-bloom {
-  animation: warmLightBloom 4.5s ease-in-out infinite;
+/* Always-on instrument-dial spin for InstrumentPanelCard's dashed icon
+   ring — a plain compositor-thread CSS transform loop, not tied to scroll
+   or any JS render loop, so it costs nothing beyond a single running
+   animation and can't compete with Lenis/GSAP for main-thread frame time. */
+@keyframes instrumentSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
-@keyframes softSconcePulse {
-  0%, 100% {
-    opacity: 0.6;
-  }
-  50% {
-    opacity: 1;
-  }
+.animate-instrument-spin {
+  animation: instrumentSpin 22s linear infinite;
 }
 
-.animate-sconce-pulse {
-  animation: softSconcePulse 3.8s ease-in-out infinite;
-}
-
-@keyframes clipReveal {
-  from {
-    clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
-    opacity: 0;
-    transform: translateY(12px) scale(0.99);
+@media (prefers-reduced-motion: reduce) {
+  .animate-instrument-spin {
+    animation: none;
   }
-  to {
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.animate-reveal-clip {
-  animation: clipReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
